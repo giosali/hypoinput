@@ -8,6 +8,12 @@ HINSTANCE g_hInst = NULL;
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
+    // Prevents multiple instances of this application from running.
+    HANDLE hMutex = CreateMutexEx(NULL, szWindowClass, CREATE_MUTEX_INITIAL_OWNER, MUTEX_ALL_ACCESS);
+    if (!hMutex) {
+        return 1;
+    }
+
     // Maintain handle to application instance.
     g_hInst = hInstance;
 
@@ -40,6 +46,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
         DispatchMessage(&msg);
     }
 
+    ReleaseMutex(hMutex);
     return (int)msg.wParam;
 }
 
