@@ -6,6 +6,9 @@ static TCHAR szWindowClass[] = _T("hypoinput");
 static TCHAR szTitle[] = _T("Hypoinput");
 HINSTANCE g_hInst = NULL;
 
+// Forward declarations of functions included in this code module:
+LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
     // Prevents multiple instances of this application from running.
