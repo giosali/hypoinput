@@ -32,6 +32,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
     wcex.hIconSm = LoadIcon(wcex.hInstance, IDI_APPLICATION);
     RegisterClassEx(&wcex);
 
+    // Causes the application to look crisp on displays with high DPIs.
+    // This must be called before creating any HWNDs.
+    SetProcessDPIAware();
+
     // HWND_MESSAGE causes the window to be a message-only window.
     HWND hWnd = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, szWindowClass, szTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 800, 450, HWND_MESSAGE, NULL, hInstance, NULL);
     if (!hWnd) {
