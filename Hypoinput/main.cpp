@@ -1,4 +1,7 @@
+#include "main.h"
+
 #include <Windows.h>
+#include <cstdint>
 #include <tchar.h>
 
 // Global variables:
@@ -8,6 +11,10 @@ HINSTANCE g_hInst = NULL;
 
 // Forward declarations of functions included in this code module:
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+BOOL addNotificationIcon(HWND&);
+BOOL deleteNotificationIcon(HWND&);
+const uint32_t g_notifyIconId = 1;
+const UINT WMAPP_NOTIFYCALLBACK = WM_APP + 1;
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -63,8 +70,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     case WM_COMMAND:
         break;
     case WM_CREATE:
+        if (!addNotificationIcon(hWnd)) {
+            return -1;
+        }
+
         break;
     case WM_DESTROY:
+        deleteNotificationIcon(hWnd);
         PostQuitMessage(0);
         break;
     default:
@@ -72,4 +84,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     }
 
     return 0;
+}
+
+BOOL addNotificationIcon(HWND& hWnd)
+{
+    NOTIFYICONDATA nid = { sizeof(nid) };
+    nid.hWnd = hWnd;
+    nid.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE | NIF_SHOWTIP;
+    nid.uID = g_notifyIconId;
+    nid.uCallbackMessage = WMAPP_NOTIFYCALLBACK;
+    nid.hIcon = (HICON)LoadImage(g_hInst, MAKEINTRESOURCE(IDI_NOTIFICATIONICON), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_DEFAULTSIZE);
+    wcscpy_s(nid.szTip, L"Hypoinput v0.1.0");
+    Shell_NotifyIcon(NIM_ADD, &nid);
+
+    // NOTIFYICON_VERSION_4 is preferred
+    nid.uVersion = NOTIFYICON_VERSION_4;
+    return Shell_NotifyIcon(NIM_SETVERSION, &nid);
+}
+
+BOOL deleteNotificationIcon(HWND& hWnd)
+{
+    NOTIFYICONDATA nid = { sizeof(nid) };
+    nid.hWnd = hWnd;
+    nid.uID = g_notifyIconId;
+    return Shell_NotifyIcon(NIM_DELETE, &nid);
 }
