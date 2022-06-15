@@ -54,6 +54,23 @@ END
 // remains consistent on all systems.
 IDI_NOTIFICATIONICON    ICON                    "C:\\Users\\gsali\\source\\repos\\Hypoinput\\Hypoinput.ico"
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_NOTIFICATIONICONMENU MENU
+BEGIN
+    POPUP ""
+    BEGIN
+        MENUITEM "Run at startup",              IDM_RUNATSTARTUP
+        MENUITEM "Enable",                      IDM_ENABLE
+        MENUITEM SEPARATOR
+        MENUITEM "Exit",                        IDM_EXIT
+    END
+END
+
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
