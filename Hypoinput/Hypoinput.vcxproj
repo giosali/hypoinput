@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -141,11 +141,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="environment.cpp" />
+    <ClCompile Include="expansions.cpp" />
+    <ClCompile Include="file.cpp" />
+    <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="environment.h" />
+    <ClInclude Include="expansions.h" />
+    <ClInclude Include="file.h" />
+    <ClInclude Include="keyboard.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="picojson.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Hypoinput.rc" />
