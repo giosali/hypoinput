@@ -2,24 +2,29 @@
 
 #include "utils.h"
 #include <Windows.h>
+#include <array>
 #include <functional>
+#include <vector>
 
 namespace keyboard {
 
 class KeyboardHook {
 public:
     KeyboardHook();
-    explicit KeyboardHook(const std::function<bool(unsigned)>&);
+    explicit KeyboardHook(const std::function<std::string(unsigned)>&);
 
 private:
     static LRESULT CALLBACK hookCallBack(_In_ int, _In_ WPARAM, _In_ LPARAM);
 
-    static std::function<bool(unsigned)> s_func;
+    static std::function<std::string(unsigned)> s_func;
     static bool s_isEnabled;
 
     HHOOK m_hookId;
 };
 
 std::string mapVirtualKey(int);
+void inject(const std::string&);
+template<size_t N>
+std::vector<INPUT> inputFromVirtualKeys(std::array<int, N>);
 
 } // namespace keyboard

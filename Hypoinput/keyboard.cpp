@@ -7,7 +7,7 @@ KeyboardHook::KeyboardHook()
 {
 }
 
-KeyboardHook::KeyboardHook(const std::function<bool(unsigned)>& func)
+KeyboardHook::KeyboardHook(const std::function<std::string(unsigned)>& func)
     : m_hookId(NULL)
 {
     s_func = func;
@@ -20,7 +20,16 @@ LRESULT KeyboardHook::hookCallBack(_In_ int nCode, _In_ WPARAM wParam, _In_ LPAR
         case WM_KEYDOWN:
             KBDLLHOOKSTRUCT* kbStruct = (KBDLLHOOKSTRUCT*)lParam;
             int vkCode = kbStruct->vkCode;
-            s_func(vkCode);
+            std::string input = s_func(vkCode);
+
+            // Sends the text expansion if the replacement text isn't empty.
+            if (!input.empty()) {
+                inject(input);
+
+                // Temporarily blocks keyboard input if there's a text expansion to send.
+                return 1;
+            }
+
             break;
         }
     }
@@ -44,5 +53,74 @@ std::string mapVirtualKey(int vkCode)
     std::wstring ws(buffer);
     return result == 1 && !ws.empty() ? utils::wstringToString(ws) : std::string();
 }
+
+void inject(const std::string& input)
+{
+    std::vector<INPUT> inputs;
+    char previousCh = '\0';
+    for (size_t i = 0; i < input.length(); i++) {
+        char ch = input[i];
+
+        // Adds nothing if the current character is the same as the previous character.
+        if (ch == previousCh) {
+            INPUT input {};
+            input.type = INPUT_KEYBOARD;
+            input.ki.wVk = 0;
+            input.ki.wScan = 0;
+            input.ki.dwFlags = KEYEVENTF_UNICODE;
+            inputs.push_back(input);
+        }
+
+        switch (ch) {
+        case '\n': {
+            // Simulates the Shift + Enter keys if the character is a newline char
+            std::vector<INPUT> vkInputs = inputFromVirtualKeys<2>({ VK_SHIFT, VK_RETURN });
+            inputs.insert(std::end(inputs), std::begin(vkInputs), std::end(vkInputs));
+            break;
+        }
+        case '\t': {
+            std::vector<INPUT> vkInputs = inputFromVirtualKeys<1>({ VK_TAB });
+            inputs.insert(std::end(inputs), std::begin(vkInputs), std::end(vkInputs));
+            break;
+        }
+        default: {
+            INPUT input {};
+            input.type = INPUT_KEYBOARD;
+            input.ki.wVk = 0;
+            input.ki.wScan = ch;
+            input.ki.dwFlags = KEYEVENTF_UNICODE;
+            inputs.push_back(input);
+            break;
+        }
+        }
+
+        previousCh = ch;
+    }
+
+    SendInput(inputs.size(), &inputs[0], sizeof(INPUT));
+}
+
+template<size_t N>
+std::vector<INPUT> inputFromVirtualKeys(std::array<int, N> vkCodes)
+{
+    std::vector<INPUT> inputs(N * 2);
+    for (size_t i = 0; i < N; i++) {
+        // Presses the key.
+        INPUT input {};
+        input.type = INPUT_KEYBOARD;
+        input.ki.wVk = vkCodes[i];
+        input.ki.wScan = 0;
+        inputs[i] = input;
+
+        // Releases the key.
+        input.ki.dwFlags = KEYEVENTF_KEYUP;
+        inputs[i + N] = input;
+    }
+
+    return inputs;
+}
+
+template std::vector<INPUT> inputFromVirtualKeys<1>(std::array<int, 1>);
+template std::vector<INPUT> inputFromVirtualKeys<2>(std::array<int, 2>);
 
 } // namespace keyboard
