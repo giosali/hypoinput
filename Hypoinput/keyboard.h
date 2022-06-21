@@ -1,5 +1,6 @@
 #pragma once
 
+#include "expansions.h"
 #include "utils.h"
 #include <Windows.h>
 #include <array>
@@ -24,7 +25,8 @@ private:
 
 std::string mapVirtualKey(int);
 void inject(const std::string&);
-template<size_t N>
+void repeat(int, size_t);
+template <size_t N>
 std::vector<INPUT> inputFromVirtualKeys(std::array<int, N>);
 
 } // namespace keyboard

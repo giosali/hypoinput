@@ -20,11 +20,14 @@ LRESULT KeyboardHook::hookCallBack(_In_ int nCode, _In_ WPARAM wParam, _In_ LPAR
         case WM_KEYDOWN:
             KBDLLHOOKSTRUCT* kbStruct = (KBDLLHOOKSTRUCT*)lParam;
             int vkCode = kbStruct->vkCode;
-            std::string input = s_func(vkCode);
+            std::string trigger = s_func(vkCode);
 
-            // Sends the text expansion if the replacement text isn't empty.
-            if (!input.empty()) {
-                inject(input);
+            // Sends the text expansion if the trigger text isn't empty.
+            if (!trigger.empty()) {
+                // Erases the trigger text that the user typed.
+                std::string replacement = expansions::TextExpansionManager::getReplacement(trigger);
+                repeat(VK_BACK, replacement.length() - 1);
+                inject(replacement);
 
                 // Temporarily blocks keyboard input if there's a text expansion to send.
                 return 1;
@@ -100,7 +103,24 @@ void inject(const std::string& input)
     SendInput(inputs.size(), &inputs[0], sizeof(INPUT));
 }
 
-template<size_t N>
+void repeat(int vkCode, size_t count)
+{
+    std::vector<INPUT> inputs = {};
+    for (size_t i = 0; i < count; i++) {
+        INPUT input {};
+        input.type = INPUT_KEYBOARD;
+        input.ki.wVk = vkCode;
+        input.ki.wScan = 0;
+        inputs.push_back(input);
+
+        input.ki.dwFlags = KEYEVENTF_KEYUP;
+        inputs.push_back(input);
+    }
+
+    SendInput(inputs.size(), &inputs[0], sizeof(INPUT));
+}
+
+template <size_t N>
 std::vector<INPUT> inputFromVirtualKeys(std::array<int, N> vkCodes)
 {
     std::vector<INPUT> inputs(N * 2);
