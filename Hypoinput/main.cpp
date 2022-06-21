@@ -1,10 +1,16 @@
 #include "main.h"
 
+#include "expansions.h"
+#include "keyboard.h"
+#include "picojson.h"
 #include <Windows.h>
 #include <cstdint>
+#include <string>
 #include <tchar.h>
 
 // Global variables:
+const uint32_t g_notifyIconId = 1;
+const UINT WMAPP_NOTIFYCALLBACK = WM_APP + 1;
 static TCHAR szWindowClass[] = _T("hypoinput");
 static TCHAR szTitle[] = _T("Hypoinput");
 HINSTANCE g_hInst = NULL;
@@ -13,8 +19,9 @@ HINSTANCE g_hInst = NULL;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 BOOL addNotificationIcon(HWND&);
 BOOL deleteNotificationIcon(HWND&);
-const uint32_t g_notifyIconId = 1;
-const UINT WMAPP_NOTIFYCALLBACK = WM_APP + 1;
+void showContextMenu(HWND&, POINT&);
+void editContextMenuItem(HMENU&, int, UINT, bool, const wchar_t* = L"");
+std::string onKeyDown(unsigned);
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -68,16 +75,41 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     switch (msg) {
     case WM_COMMAND:
+        switch (LOWORD(wParam)) {
+        case IDM_RUNATSTARTUP:
+            break;
+        case IDM_ENABLE:
+            break;
+        case IDM_EXIT:
+            DestroyWindow(hWnd);
+            break;
+        default:
+            return DefWindowProc(hWnd, msg, wParam, lParam);
+        }
+
         break;
     case WM_CREATE:
         if (!addNotificationIcon(hWnd)) {
             return -1;
         }
 
+        expansions::TextExpansionManager::init();
         break;
     case WM_DESTROY:
         deleteNotificationIcon(hWnd);
         PostQuitMessage(0);
+        break;
+    case WMAPP_NOTIFYCALLBACK:
+        switch (LOWORD(lParam)) {
+        case WM_CONTEXTMENU:
+            POINT pt;
+            if (GetCursorPos(&pt)) {
+                showContextMenu(hWnd, pt);
+            }
+
+            break;
+        }
+
         break;
     default:
         return DefWindowProc(hWnd, msg, wParam, lParam);
@@ -108,4 +140,66 @@ BOOL deleteNotificationIcon(HWND& hWnd)
     nid.hWnd = hWnd;
     nid.uID = g_notifyIconId;
     return Shell_NotifyIcon(NIM_DELETE, &nid);
+}
+
+void showContextMenu(HWND& hWnd, POINT& pt)
+{
+    HMENU hMenu = LoadMenu(g_hInst, MAKEINTRESOURCE(IDR_NOTIFICATIONICONMENU));
+    if (!hMenu) {
+        return;
+    }
+
+    HMENU hSubMenu = GetSubMenu(hMenu, 0);
+    if (!hSubMenu) {
+        return;
+    }
+
+    // The window must be the foreground window before calling TrackPopupMenu
+    // or the menu will not disappear when the user clicks away.
+    SetForegroundWindow(hWnd);
+
+    // Respects menu drop alignment and returns menu item id.
+    UINT uFlags = TPM_RIGHTBUTTON;
+    uFlags |= GetSystemMetrics(SM_MENUDROPALIGNMENT) != 0 ? TPM_RIGHTALIGN : TPM_LEFTALIGN;
+
+    TrackPopupMenuEx(hSubMenu, uFlags, pt.x, pt.y, hWnd, NULL);
+    DestroyMenu(hMenu);
+}
+
+void editContextMenuItem(HMENU& hMenu, int idm, UINT fMask, bool check, const wchar_t* caption)
+{
+    MENUITEMINFO mii = { sizeof(MENUITEMINFO) };
+    mii.fMask = fMask;
+    GetMenuItemInfo(hMenu, idm, FALSE, &mii);
+
+    if ((fMask & MIIM_STATE) == MIIM_STATE) {
+        mii.fState = check ? MFS_CHECKED : MFS_UNCHECKED;
+    }
+
+    if ((fMask & MIIM_STRING) == MIIM_STRING) {
+        mii.dwTypeData = const_cast<LPWSTR>(caption);
+    }
+
+    SetMenuItemInfo(hMenu, idm, FALSE, &mii);
+}
+
+std::string onKeyDown(unsigned vkCode)
+{
+    static std::string input;
+
+    // Handles the Backspace key.
+    if (vkCode == 8 && !input.empty()) {
+        input.pop_back();
+        return std::string();
+    }
+
+    // Exits if the pressed key is garbage.
+    std::string key = keyboard::mapVirtualKey(vkCode);
+    if (key.empty() || iscntrl(key[0])) {
+        return std::string();
+    }
+
+    input.append(key);
+    std::string replacement = expansions::TextExpansionManager::parse(input);
+    return replacement.empty() ? std::string() : replacement;
 }
