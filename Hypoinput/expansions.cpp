@@ -38,6 +38,11 @@ std::string TextExpansionManager::parse(std::string& input)
     }
 }
 
+std::string TextExpansionManager::getReplacement(const std::string& trigger)
+{
+    return s_textExpansions[trigger];
+}
+
 std::unordered_map<std::string, std::string> TextExpansionManager::read()
 {
     std::filesystem::path textExpansionsFilePath = environment::getFilePath(environment::SpecialFile::TextExpansions);
