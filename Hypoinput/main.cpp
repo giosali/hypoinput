@@ -200,6 +200,6 @@ std::string onKeyDown(unsigned vkCode)
     }
 
     input.append(key);
-    std::string replacement = expansions::TextExpansionManager::parse(input);
-    return replacement.empty() ? std::string() : replacement;
+    std::string trigger = expansions::TextExpansionManager::parse(input);
+    return trigger.empty() ? std::string() : trigger;
 }
