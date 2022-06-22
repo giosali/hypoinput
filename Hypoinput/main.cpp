@@ -188,8 +188,11 @@ std::string onKeyDown(unsigned vkCode)
     static std::string input;
 
     // Handles the Backspace key.
-    if (vkCode == 8 && !input.empty()) {
-        input.pop_back();
+    if (vkCode == VK_BACK) {
+        if (!input.empty()) {
+            input.pop_back();
+        }
+
         return std::string();
     }
 
