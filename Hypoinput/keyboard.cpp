@@ -143,4 +143,7 @@ std::vector<INPUT> inputFromVirtualKeys(std::array<int, N> vkCodes)
 template std::vector<INPUT> inputFromVirtualKeys<1>(std::array<int, 1>);
 template std::vector<INPUT> inputFromVirtualKeys<2>(std::array<int, 2>);
 
+std::function<std::string(unsigned)> KeyboardHook::s_func = {};
+bool KeyboardHook::s_isEnabled = true;
+
 } // namespace keyboard
