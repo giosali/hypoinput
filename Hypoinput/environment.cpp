@@ -6,8 +6,11 @@ std::filesystem::path getFolderPath(SpecialFolder specialFolder)
 {
     switch (specialFolder) {
     case SpecialFolder::ApplicationData:
-        if (char* envItem = std::getenv("APPDATA")) {
-            return std::filesystem::path(envItem);
+        char* buffer;
+        if (_dupenv_s(&buffer, NULL, "APPDATA") == 0 && buffer != nullptr) {
+            std::filesystem::path path = buffer;
+            free(buffer);
+            return path;
         }
 
         break;
