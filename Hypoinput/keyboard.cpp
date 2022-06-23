@@ -100,7 +100,7 @@ void inject(const std::string& input)
         previousCh = ch;
     }
 
-    SendInput(inputs.size(), &inputs[0], sizeof(INPUT));
+    SendInput((UINT)inputs.size(), &inputs[0], sizeof(INPUT));
 }
 
 void repeat(int vkCode, size_t count)
@@ -117,7 +117,7 @@ void repeat(int vkCode, size_t count)
         inputs.push_back(input);
     }
 
-    SendInput(inputs.size(), &inputs[0], sizeof(INPUT));
+    SendInput((UINT)inputs.size(), &inputs[0], sizeof(INPUT));
 }
 
 template <size_t N>
