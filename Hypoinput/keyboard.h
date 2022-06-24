@@ -13,6 +13,8 @@ class KeyboardHook {
 public:
     KeyboardHook();
     explicit KeyboardHook(const std::function<std::string(unsigned)>&);
+    void remove() const;
+    void add(HINSTANCE&);
 
 private:
     static LRESULT CALLBACK hookCallBack(_In_ int, _In_ WPARAM, _In_ LPARAM);

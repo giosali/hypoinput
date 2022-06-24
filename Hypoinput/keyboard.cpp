@@ -13,6 +13,16 @@ KeyboardHook::KeyboardHook(const std::function<std::string(unsigned)>& func)
     s_func = func;
 }
 
+void KeyboardHook::remove() const
+{
+    UnhookWindowsHookEx(m_hookId);
+}
+
+void KeyboardHook::add(HINSTANCE& hmod)
+{
+    m_hookId = SetWindowsHookEx(WH_KEYBOARD_LL, hookCallBack, hmod, 0);
+}
+
 LRESULT KeyboardHook::hookCallBack(_In_ int nCode, _In_ WPARAM wParam, _In_ LPARAM lParam)
 {
     if (nCode >= 0 && s_isEnabled) {
