@@ -14,6 +14,7 @@ const UINT WMAPP_NOTIFYCALLBACK = WM_APP + 1;
 static TCHAR szWindowClass[] = _T("hypoinput");
 static TCHAR szTitle[] = _T("Hypoinput");
 HINSTANCE g_hInst = NULL;
+keyboard::KeyboardHook g_keyboardHook;
 
 // Forward declarations of functions included in this code module:
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -94,10 +95,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
         }
 
         expansions::TextExpansionManager::init();
+        g_keyboardHook = keyboard::KeyboardHook(onKeyDown);
+        g_keyboardHook.add(g_hInst);
         break;
     case WM_DESTROY:
         deleteNotificationIcon(hWnd);
         PostQuitMessage(0);
+        g_keyboardHook.remove();
         break;
     case WMAPP_NOTIFYCALLBACK:
         switch (LOWORD(lParam)) {
