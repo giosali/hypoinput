@@ -13,9 +13,9 @@ void create(const std::filesystem::path& path)
     }
 
     // Creates the file.
-    std::fstream fs;
-    fs.open(path);
-    fs.close();
+    std::ofstream ofs;
+    ofs.open(path);
+    ofs.close();
 }
 
 }
