@@ -15,10 +15,10 @@ std::string TextExpansionManager::parse(std::string& input)
         return std::string();
     }
 
-    // Checks if the input is present in the text expansions.
+    // Checks if the input is one of the triggers in the text expansions.
     if (s_textExpansions.find(input) != s_textExpansions.end()) {
         // Returns the corresponding replacement.
-        return s_textExpansions[input];
+        return input;
     } else {
         bool startsWithInput = false;
         std::string trimmedInput = input.empty() ? input.substr(0, input.length()) : std::string();
