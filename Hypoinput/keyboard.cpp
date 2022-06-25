@@ -36,11 +36,11 @@ LRESULT KeyboardHook::hookCallBack(_In_ int nCode, _In_ WPARAM wParam, _In_ LPAR
             if (!trigger.empty()) {
                 // Erases the trigger text that the user typed.
                 std::string replacement = expansions::TextExpansionManager::getReplacement(trigger);
-                repeat(VK_BACK, replacement.length());
+                repeat(VK_BACK, trigger.length() - 1);
                 inject(replacement);
 
                 // Temporarily blocks keyboard input if there's a text expansion to send.
-                //return 1;
+                return 1;
             }
 
             break;
