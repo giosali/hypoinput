@@ -17,7 +17,7 @@ std::string TextExpansionManager::parse(std::string& input)
 
     // Checks if the input is one of the triggers in the text expansions.
     if (s_textExpansions.find(input) != s_textExpansions.end()) {
-        // Returns the corresponding replacement.
+        // Returns the trigger.
         return input;
     } else {
         bool startsWithInput = false;
