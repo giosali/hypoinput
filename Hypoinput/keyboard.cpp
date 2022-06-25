@@ -36,11 +36,11 @@ LRESULT KeyboardHook::hookCallBack(_In_ int nCode, _In_ WPARAM wParam, _In_ LPAR
             if (!trigger.empty()) {
                 // Erases the trigger text that the user typed.
                 std::string replacement = expansions::TextExpansionManager::getReplacement(trigger);
-                repeat(VK_BACK, replacement.length() - 1);
+                repeat(VK_BACK, replacement.length());
                 inject(replacement);
 
                 // Temporarily blocks keyboard input if there's a text expansion to send.
-                return 1;
+                //return 1;
             }
 
             break;
@@ -110,7 +110,9 @@ void inject(const std::string& input)
         previousCh = ch;
     }
 
-    SendInput((UINT)inputs.size(), &inputs[0], sizeof(INPUT));
+    if (!inputs.empty()) {
+        SendInput((UINT)inputs.size(), &inputs[0], sizeof(INPUT));
+    }
 }
 
 void repeat(int vkCode, size_t count)
@@ -127,7 +129,9 @@ void repeat(int vkCode, size_t count)
         inputs.push_back(input);
     }
 
-    SendInput((UINT)inputs.size(), &inputs[0], sizeof(INPUT));
+    if (!inputs.empty()) {
+        SendInput((UINT)inputs.size(), &inputs[0], sizeof(INPUT));
+    }
 }
 
 template <size_t N>
