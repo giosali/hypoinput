@@ -111,6 +111,9 @@ void inject(const std::wstring& input)
             inputs.insert(std::end(inputs), std::begin(vkInputs), std::end(vkInputs));
             break;
         }
+        case '\0':
+            // Handles null-terminated strings since the last character is set to \0.
+            break;
         default: {
             INPUT input {};
             input.type = INPUT_KEYBOARD;
