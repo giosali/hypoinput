@@ -85,20 +85,8 @@ std::string mapVirtualKey(int vkCode)
 void inject(const std::wstring& input)
 {
     std::vector<INPUT> inputs;
-    wchar_t previousCh = '\0';
     for (size_t i = 0; i < input.length(); i++) {
         wchar_t ch = input[i];
-
-        // Adds nothing if the current character is the same as the previous character.
-        if (ch == previousCh) {
-            INPUT input {};
-            input.type = INPUT_KEYBOARD;
-            input.ki.wVk = 0;
-            input.ki.wScan = 0;
-            input.ki.dwFlags = KEYEVENTF_UNICODE;
-            inputs.push_back(input);
-        }
-
         switch (ch) {
         case '\n': {
             // Simulates the Shift + Enter keys if the character is a newline char
@@ -121,11 +109,13 @@ void inject(const std::wstring& input)
             input.ki.wScan = ch;
             input.ki.dwFlags = KEYEVENTF_UNICODE;
             inputs.push_back(input);
+
+            // Necessary for handling repeat characters when using SendInput.
+            input.ki.dwFlags |= KEYEVENTF_KEYUP;
+            inputs.push_back(input);
             break;
         }
         }
-
-        previousCh = ch;
     }
 
     if (!inputs.empty()) {
