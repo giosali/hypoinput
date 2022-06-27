@@ -208,5 +208,11 @@ std::string onKeyDown(unsigned vkCode)
 
     input.append(key);
     std::string trigger = expansions::TextExpansionManager::parse(input);
-    return trigger.empty() ? std::string() : trigger;
+    if (!trigger.empty()) {
+        // Resets the input after matching the trigger.
+        input = std::string();
+        return trigger;
+    }
+
+    return std::string();
 }
