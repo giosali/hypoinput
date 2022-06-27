@@ -36,9 +36,23 @@ LRESULT KeyboardHook::hookCallBack(_In_ int nCode, _In_ WPARAM wParam, _In_ LPAR
             if (!trigger.empty()) {
                 std::string replacement = expansions::TextExpansionManager::getReplacement(trigger);
 
+                // Replaces the first instance of the Cursor constant with an empty
+                // string in order to reposition the cursor.
+                size_t cursorPos = replacement.find(Cursor);
+                if (cursorPos != std::string::npos) {
+                    replacement.replace(cursorPos, Cursor.length(), std::string());
+                }
+
                 // Erases the trigger text that the user typed.
                 repeat(VK_BACK, trigger.length() - 1);
+
+                // Sends the replacement text.
                 inject(utils::stringToWString(replacement));
+
+                // If the Cursor constant was found, move the cursor to its position.
+                if (cursorPos != std::string::npos) {
+                    repeat(VK_LEFT, replacement.length() - cursorPos);
+                }
 
                 // Temporarily blocks keyboard input if there's a text expansion to send.
                 return 1;
