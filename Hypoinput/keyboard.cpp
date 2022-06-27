@@ -34,10 +34,11 @@ LRESULT KeyboardHook::hookCallBack(_In_ int nCode, _In_ WPARAM wParam, _In_ LPAR
 
             // Sends the text expansion if the trigger text isn't empty.
             if (!trigger.empty()) {
-                // Erases the trigger text that the user typed.
                 std::string replacement = expansions::TextExpansionManager::getReplacement(trigger);
+
+                // Erases the trigger text that the user typed.
                 repeat(VK_BACK, trigger.length() - 1);
-                inject(replacement);
+                inject(utils::stringToWString(replacement));
 
                 // Temporarily blocks keyboard input if there's a text expansion to send.
                 return 1;
@@ -67,12 +68,12 @@ std::string mapVirtualKey(int vkCode)
     return result == 1 && !ws.empty() ? utils::wstringToString(ws) : std::string();
 }
 
-void inject(const std::string& input)
+void inject(const std::wstring& input)
 {
     std::vector<INPUT> inputs;
-    char previousCh = '\0';
+    wchar_t previousCh = '\0';
     for (size_t i = 0; i < input.length(); i++) {
-        char ch = input[i];
+        wchar_t ch = input[i];
 
         // Adds nothing if the current character is the same as the previous character.
         if (ch == previousCh) {

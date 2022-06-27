@@ -27,7 +27,7 @@ private:
 };
 
 std::string mapVirtualKey(int);
-void inject(const std::string&);
+void inject(const std::wstring&);
 void repeat(int, size_t);
 template <size_t N>
 std::vector<INPUT> inputFromVirtualKeys(std::array<int, N>);
