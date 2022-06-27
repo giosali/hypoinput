@@ -9,6 +9,12 @@
 
 namespace keyboard {
 
+namespace {
+
+    static const std::string Cursor = "{{__cursor__}}";
+
+} // namespace
+
 class KeyboardHook {
 public:
     KeyboardHook();
