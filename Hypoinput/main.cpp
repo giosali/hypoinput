@@ -162,7 +162,7 @@ void showContextMenu(HWND& hWnd, POINT& pt)
 
     std::wstring isEnabledStatus = g_keyboardHook.s_isEnabled ? L"Disable" : L"Enable";
     editContextMenuItem(hMenu, IDM_ENABLE, MIIM_STRING | MIIM_DATA, false, isEnabledStatus.c_str());
-    
+
     /* TODO: Add .ini file handling */
     editContextMenuItem(hMenu, IDM_RUNATSTARTUP, MIIM_STATE, false);
 
