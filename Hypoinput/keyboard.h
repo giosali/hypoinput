@@ -23,11 +23,12 @@ public:
     void remove() const;
     void add(HINSTANCE&);
 
+    static bool s_isEnabled;
+
 private:
     static LRESULT CALLBACK hookCallBack(_In_ int, _In_ WPARAM, _In_ LPARAM);
 
     static std::function<std::string(unsigned)> s_func;
-    static bool s_isEnabled;
 
     HHOOK m_hookId;
 };
