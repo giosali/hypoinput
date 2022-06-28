@@ -79,10 +79,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     switch (msg) {
     case WM_COMMAND:
         switch (LOWORD(wParam)) {
-        case IDM_RUNATSTARTUP:
-            break;
         case IDM_ENABLE:
             g_keyboardHook.s_isEnabled = !g_keyboardHook.s_isEnabled;
+            break;
+        case IDM_RUNATSTARTUP:
             break;
         case IDM_OPENFILE: {
             std::string textExpansionsFilePath = environment::getFilePath(environment::SpecialFile::TextExpansions).string();

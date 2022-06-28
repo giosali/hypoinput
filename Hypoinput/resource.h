@@ -4,8 +4,8 @@
 //
 #define IDR_NOTIFICATIONICONMENU        4
 #define IDI_NOTIFICATIONICON            101
-#define IDM_RUNATSTARTUP                40001
-#define IDM_ENABLE                      40002
+#define IDM_ENABLE                      40001
+#define IDM_RUNATSTARTUP                40002
 #define IDM_OPENFILE                    40003
 #define IDM_EXIT                        40004
 

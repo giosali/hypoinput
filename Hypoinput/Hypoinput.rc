@@ -64,8 +64,8 @@ IDR_NOTIFICATIONICONMENU MENU
 BEGIN
     POPUP ""
     BEGIN
-        MENUITEM "Run at startup",              IDM_RUNATSTARTUP
         MENUITEM "Enable",                      IDM_ENABLE
+        MENUITEM "Run at startup",              IDM_RUNATSTARTUP
         MENUITEM SEPARATOR
         MENUITEM "Open file",                   IDM_OPENFILE
         MENUITEM SEPARATOR
