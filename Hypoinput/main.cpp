@@ -80,6 +80,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
         case IDM_RUNATSTARTUP:
             break;
         case IDM_ENABLE:
+            g_keyboardHook.s_isEnabled = !g_keyboardHook.s_isEnabled;
             break;
         case IDM_EXIT:
             DestroyWindow(hWnd);
