@@ -1,8 +1,10 @@
 #include "main.h"
 
+#include "environment.h"
 #include "expansions.h"
 #include "keyboard.h"
 #include "picojson.h"
+#include "utils.h"
 #include <Windows.h>
 #include <cstdint>
 #include <string>
@@ -82,6 +84,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
         case IDM_ENABLE:
             g_keyboardHook.s_isEnabled = !g_keyboardHook.s_isEnabled;
             break;
+        case IDM_OPENFILE: {
+            std::string textExpansionsFilePath = environment::getFilePath(environment::SpecialFile::TextExpansions).string();
+            ShellExecute(NULL, L"open", utils::stringToWString(textExpansionsFilePath).c_str(), NULL, NULL, SW_SHOW);
+            break;
+        }
         case IDM_EXIT:
             DestroyWindow(hWnd);
             break;
