@@ -86,7 +86,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
             break;
         case IDM_OPENFILE: {
             std::string textExpansionsFilePath = environment::getFilePath(environment::SpecialFile::TextExpansions).string();
-            ShellExecute(NULL, L"open", utils::stringToWString(textExpansionsFilePath).c_str(), NULL, NULL, SW_SHOW);
+            ShellExecute(NULL, NULL, utils::stringToWString(textExpansionsFilePath).c_str(), NULL, NULL, SW_SHOW);
             break;
         }
         case IDM_EXIT:
