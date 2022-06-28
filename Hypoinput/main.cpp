@@ -155,8 +155,15 @@ void showContextMenu(HWND& hWnd, POINT& pt)
 
     HMENU hSubMenu = GetSubMenu(hMenu, 0);
     if (!hSubMenu) {
+        DestroyMenu(hMenu);
         return;
     }
+
+    std::wstring isEnabledStatus = g_keyboardHook.s_isEnabled ? L"Disable" : L"Enable";
+    editContextMenuItem(hMenu, IDM_ENABLE, MIIM_STRING | MIIM_DATA, false, isEnabledStatus.c_str());
+    
+    /* TODO: Add .ini file handling */
+    editContextMenuItem(hMenu, IDM_RUNATSTARTUP, MIIM_STATE, false);
 
     // The window must be the foreground window before calling TrackPopupMenu
     // or the menu will not disappear when the user clicks away.
