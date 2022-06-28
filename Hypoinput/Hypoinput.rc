@@ -67,6 +67,8 @@ BEGIN
         MENUITEM "Run at startup",              IDM_RUNATSTARTUP
         MENUITEM "Enable",                      IDM_ENABLE
         MENUITEM SEPARATOR
+        MENUITEM "Open file",                   IDM_OPENFILE
+        MENUITEM SEPARATOR
         MENUITEM "Exit",                        IDM_EXIT
     END
 END
