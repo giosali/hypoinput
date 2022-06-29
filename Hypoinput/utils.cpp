@@ -28,4 +28,28 @@ bool startsWith(const std::string& instance, const std::string& value)
     return instance.rfind(value, 0) == 0;
 }
 
+std::string ltrim(const std::string& s, char ch)
+{
+    size_t i = 0;
+    for (; i < s.length(); i++) {
+        if (s[i] != ch) {
+            break;
+        }
+    }
+
+    return s.substr(i);
+}
+
+std::string rtrim(const std::string& s, char ch)
+{
+    size_t i = s.length() - 1;
+    for (; i > 0; i--) {
+        if (s[i] != ch) {
+            break;
+        }
+    }
+
+    return s.substr(0, i + 1);
+}
+
 } // namespace utils
