@@ -57,4 +57,12 @@ std::string boolToString(bool b)
     return b ? "true" : "false";
 }
 
+bool stringToBool(std::string s)
+{
+    std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+    bool b;
+    std::istringstream(s) >> std::boolalpha >> b;
+    return b;
+}
+
 } // namespace utils
