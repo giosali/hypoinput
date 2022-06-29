@@ -3,7 +3,6 @@
 #include "environment.h"
 #include "expansions.h"
 #include "keyboard.h"
-#include "picojson.h"
 #include "utils.h"
 #include <Windows.h>
 #include <cstdint>
