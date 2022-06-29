@@ -52,4 +52,9 @@ std::string rtrim(const std::string& s, char ch)
     return s.substr(0, i + 1);
 }
 
+std::string boolToString(bool b)
+{
+    return b ? "true" : "false";
+}
+
 } // namespace utils

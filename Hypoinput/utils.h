@@ -12,5 +12,6 @@ std::wstring stringToWString(const std::string&);
 bool startsWith(const std::string&, const std::string&);
 std::string ltrim(const std::string&, char = ' ');
 std::string rtrim(const std::string&, char = ' ');
+std::string boolToString(bool b);
 
 } // namespace utils
