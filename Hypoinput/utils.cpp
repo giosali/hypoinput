@@ -65,4 +65,53 @@ bool stringToBool(std::string s)
     return b;
 }
 
+std::vector<std::string> split(const std::string& text, char ch)
+{
+    std::vector<std::string> strings;
+    std::stringstream ss(text);
+    for (std::string line; std::getline(ss, line, ch);) {
+        strings.push_back(line);
+    }
+
+    return strings;
+}
+
+std::string trim(const std::string& s, char ch)
+{
+    size_t start = 0;
+    size_t end = s.length() - 1;
+
+    // Trim head
+    for (; start < s.length(); start++) {
+        if (s[start] != ch) {
+            break;
+        }
+    }
+
+    // Trim tail
+    for (; end >= start; end--) {
+        if (s[end] != ch) {
+            break;
+        }
+    }
+
+    size_t length = end - start + 1;
+    return s.substr(start, length);
+}
+
+std::string replace(std::string oldValue, const std::string& newValue)
+{
+    size_t length = newValue.length();
+    while (true) {
+        size_t pos = oldValue.find(newValue);
+        if (pos == std::string::npos) {
+            break;
+        }
+
+        oldValue.erase(pos, length);
+    }
+
+    return oldValue;
+}
+
 } // namespace utils

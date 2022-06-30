@@ -15,5 +15,8 @@ std::string ltrim(const std::string&, char = ' ');
 std::string rtrim(const std::string&, char = ' ');
 std::string boolToString(bool b);
 bool stringToBool(std::string);
+std::vector<std::string> split(const std::string&, char = ' ');
+std::string trim(const std::string&, char = ' ');
+std::string replace(std::string, const std::string&);
 
 } // namespace utils
