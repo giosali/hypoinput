@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Windows.h>
 #include <filesystem>
 #include <string>
 
@@ -24,5 +25,6 @@ enum class SpecialFile {
 
 std::filesystem::path getFolderPath(SpecialFolder);
 std::filesystem::path getFilePath(SpecialFile);
+std::string getResource(uint32_t, const std::wstring&);
 
 } // namespace environment
