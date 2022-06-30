@@ -144,6 +144,7 @@
     <ClCompile Include="environment.cpp" />
     <ClCompile Include="expansions.cpp" />
     <ClCompile Include="file.cpp" />
+    <ClCompile Include="ini.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="utils.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="environment.h" />
     <ClInclude Include="expansions.h" />
     <ClInclude Include="file.h" />
+    <ClInclude Include="ini.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="picojson.h" />
