@@ -2,6 +2,8 @@
 
 #include "environment.h"
 #include "expansions.h"
+#include "file.h"
+#include "ini.h"
 #include "keyboard.h"
 #include "utils.h"
 #include <Windows.h>
@@ -10,12 +12,14 @@
 #include <tchar.h>
 
 // Global variables:
+static const std::string runAtStartupSetting = "Settings.runAtStartup";
 const uint32_t g_notifyIconId = 1;
 const UINT WMAPP_NOTIFYCALLBACK = WM_APP + 1;
 static TCHAR szWindowClass[] = _T("hypoinput");
 static TCHAR szTitle[] = _T("Hypoinput");
 HINSTANCE g_hInst = NULL;
 keyboard::KeyboardHook g_keyboardHook;
+ini::IniFile g_settings(environment::getFilePath(environment::SpecialFile::SettingsFileName));
 
 // Forward declarations of functions included in this code module:
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -82,6 +86,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
             g_keyboardHook.s_isEnabled = !g_keyboardHook.s_isEnabled;
             break;
         case IDM_RUNATSTARTUP:
+            g_settings.set<bool>(runAtStartupSetting, !g_settings.get<bool>(runAtStartupSetting).value().boolean);
+            g_settings.save();
             break;
         case IDM_OPENFILE: {
             std::string textExpansionsFilePath = environment::getFilePath(environment::SpecialFile::TextExpansions).string();
@@ -99,6 +105,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     case WM_CREATE:
         if (!addNotificationIcon(hWnd)) {
             return -1;
+        }
+
+        if (!g_settings.m_exists) {
+            std::string resourceText = environment::getResource(IDR_SETTINGSINI, L"INI");
+            file::write(g_settings.m_filePath, resourceText);
+            g_settings = ini::IniFile(g_settings.m_filePath);
         }
 
         expansions::TextExpansionManager::init();
@@ -170,7 +182,7 @@ void showContextMenu(HWND& hWnd, POINT& pt)
     editContextMenuItem(hMenu, IDM_ENABLE, MIIM_STRING | MIIM_DATA, false, isEnabledStatus.c_str());
 
     /* TODO: Add .ini file handling */
-    editContextMenuItem(hMenu, IDM_RUNATSTARTUP, MIIM_STATE, false);
+    editContextMenuItem(hMenu, IDM_RUNATSTARTUP, MIIM_STATE, g_settings.get<bool>(runAtStartupSetting).value().boolean);
 
     // The window must be the foreground window before calling TrackPopupMenu
     // or the menu will not disappear when the user clicks away.
