@@ -3,8 +3,15 @@
 #include <Windows.h>
 #include <filesystem>
 #include <string>
+#include <string_view>
 
 namespace environment {
+
+namespace constants {
+
+    inline constexpr std::string_view runAtStartup = "Settings.runAtStartup";
+
+} // namespace constants
 
 namespace {
 

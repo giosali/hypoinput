@@ -12,7 +12,6 @@
 #include <tchar.h>
 
 // Global variables:
-static const std::string runAtStartupSetting = "Settings.runAtStartup";
 const uint32_t g_notifyIconId = 1;
 const UINT WMAPP_NOTIFYCALLBACK = WM_APP + 1;
 static TCHAR szWindowClass[] = _T("hypoinput");
@@ -86,7 +85,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
             g_keyboardHook.s_isEnabled = !g_keyboardHook.s_isEnabled;
             break;
         case IDM_RUNATSTARTUP:
-            g_settings.set(runAtStartupSetting, !g_settings.get<bool>(runAtStartupSetting).value().boolean);
+            g_settings.set(std::string(environment::constants::runAtStartup), !g_settings.get<bool>(std::string(environment::constants::runAtStartup)).value().boolean);
             g_settings.save();
             break;
         case IDM_OPENFILE: {
@@ -182,7 +181,7 @@ void showContextMenu(HWND& hWnd, POINT& pt)
     editContextMenuItem(hMenu, IDM_ENABLE, MIIM_STRING | MIIM_DATA, false, isEnabledStatus.c_str());
 
     /* TODO: Add .ini file handling */
-    editContextMenuItem(hMenu, IDM_RUNATSTARTUP, MIIM_STATE, g_settings.get<bool>(runAtStartupSetting).value().boolean);
+    editContextMenuItem(hMenu, IDM_RUNATSTARTUP, MIIM_STATE, g_settings.get<bool>(std::string(environment::constants::runAtStartup)).value().boolean);
 
     // The window must be the foreground window before calling TrackPopupMenu
     // or the menu will not disappear when the user clicks away.
