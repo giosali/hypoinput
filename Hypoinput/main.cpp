@@ -17,9 +17,9 @@ const uint32_t g_notifyIconId = 1;
 const UINT WMAPP_NOTIFYCALLBACK = WM_APP + 1;
 static TCHAR szWindowClass[] = _T("hypoinput");
 static TCHAR szTitle[] = _T("Hypoinput");
+static ini::IniFile g_settings(environment::getFilePath(environment::SpecialFile::Settings));
+static keyboard::KeyboardHook g_keyboardHook;
 HINSTANCE g_hInst = NULL;
-keyboard::KeyboardHook g_keyboardHook;
-ini::IniFile g_settings(environment::getFilePath(environment::SpecialFile::SettingsFileName));
 
 // Forward declarations of functions included in this code module:
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -86,7 +86,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
             g_keyboardHook.s_isEnabled = !g_keyboardHook.s_isEnabled;
             break;
         case IDM_RUNATSTARTUP:
-            g_settings.set<bool>(runAtStartupSetting, !g_settings.get<bool>(runAtStartupSetting).value().boolean);
+            g_settings.set(runAtStartupSetting, !g_settings.get<bool>(runAtStartupSetting).value().boolean);
             g_settings.save();
             break;
         case IDM_OPENFILE: {
