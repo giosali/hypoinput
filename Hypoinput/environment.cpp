@@ -22,6 +22,8 @@ std::filesystem::path getFolderPath(SpecialFolder specialFolder)
 std::filesystem::path getFilePath(SpecialFile specialFile)
 {
     switch (specialFile) {
+    case SpecialFile::Settings:
+        return getFolderPath(SpecialFolder::ApplicationData) / ApplicationName / SettingsFileName;
     case SpecialFile::TextExpansions:
         return getFolderPath(SpecialFolder::ApplicationData) / ApplicationName / TextExpansionsFileName;
     }
