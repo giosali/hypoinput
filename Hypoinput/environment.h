@@ -9,8 +9,8 @@ namespace environment {
 namespace {
 
     static const std::string ApplicationName = "Hypoinput";
-    static const std::string TextExpansionsFileName = "TextExpansions.json";
     static const std::string SettingsFileName = "Settings.ini";
+    static const std::string TextExpansionsFileName = "TextExpansions.json";
 
 } // namespace
 
@@ -19,8 +19,8 @@ enum class SpecialFolder {
 };
 
 enum class SpecialFile {
-    TextExpansions,
-    SettingsFileName
+    Settings,
+    TextExpansions
 };
 
 std::filesystem::path getFolderPath(SpecialFolder);
