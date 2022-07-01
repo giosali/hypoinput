@@ -8,7 +8,7 @@ namespace environment {
 
 namespace {
 
-    static const std::string ApplicationName = "Hypotext";
+    static const std::string ApplicationName = "Hypoinput";
     static const std::string TextExpansionsFileName = "TextExpansions.json";
     static const std::string SettingsFileName = "Settings.ini";
 
