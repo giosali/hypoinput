@@ -87,8 +87,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
             g_keyboardHook.s_isEnabled = !g_keyboardHook.s_isEnabled;
             break;
         case IDM_RUNATSTARTUP: {
+            // Edits the .INI settings file.
             bool runAtStartup = !g_settings.get<bool>(std::string(environment::constants::runAtStartup)).value().boolean;
             g_settings.set(std::string(environment::constants::runAtStartup), runAtStartup);
+            g_settings.save();
+
+            // Edits the registry value.
             if (runAtStartup) {
                 registerRunValue();
             } else {
@@ -262,7 +266,7 @@ void registerRunValue()
     GetModuleFileName(NULL, buffer, MAX_PATH);
     std::wstring fp(buffer);
     HKEY hKey;
-    LONG retval = RegOpenKeyEx(HKEY_CURRENT_USER, L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", 0, KEY_WRITE, &hKey);
+    LONG retval = RegOpenKeyEx(HKEY_CURRENT_USER, std::wstring(environment::constants::runSubkey).c_str(), 0, KEY_WRITE, &hKey);
     if (retval == ERROR_SUCCESS) {
         RegSetValueEx(hKey, szTitle, 0, REG_SZ, (BYTE*)fp.c_str(), (unsigned)((fp.size() + 1) * sizeof(wchar_t)));
     }
@@ -271,7 +275,7 @@ void registerRunValue()
 void deleteRunValue()
 {
     HKEY hKey;
-    RegOpenKeyEx(HKEY_CURRENT_USER, L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", 0, KEY_ALL_ACCESS, &hKey);
+    RegOpenKeyEx(HKEY_CURRENT_USER, std::wstring(environment::constants::runSubkey).c_str(), 0, KEY_ALL_ACCESS, &hKey);
     RegDeleteValue(hKey, szTitle);
     RegCloseKey(hKey);
 }
