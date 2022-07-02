@@ -76,4 +76,7 @@
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Settings.ini" />
+  </ItemGroup>
 </Project>

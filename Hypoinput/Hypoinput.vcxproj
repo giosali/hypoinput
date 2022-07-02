@@ -166,6 +166,9 @@
   <ItemGroup>
     <Image Include="..\Hypoinput.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Settings.ini" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
