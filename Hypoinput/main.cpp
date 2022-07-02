@@ -27,6 +27,8 @@ BOOL deleteNotificationIcon(HWND&);
 void showContextMenu(HWND&, POINT&);
 void editContextMenuItem(HMENU&, int, UINT, bool, const wchar_t* = L"");
 std::string onKeyDown(unsigned);
+void registerRunValue();
+void deleteRunValue();
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -84,10 +86,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
         case IDM_ENABLE:
             g_keyboardHook.s_isEnabled = !g_keyboardHook.s_isEnabled;
             break;
-        case IDM_RUNATSTARTUP:
-            g_settings.set(std::string(environment::constants::runAtStartup), !g_settings.get<bool>(std::string(environment::constants::runAtStartup)).value().boolean);
-            g_settings.save();
+        case IDM_RUNATSTARTUP: {
+            bool runAtStartup = !g_settings.get<bool>(std::string(environment::constants::runAtStartup)).value().boolean;
+            g_settings.set(std::string(environment::constants::runAtStartup), runAtStartup);
+            if (runAtStartup) {
+                registerRunValue();
+            } else {
+                deleteRunValue();
+            }
+
             break;
+        }
         case IDM_OPENFILE: {
             std::string textExpansionsFilePath = environment::getFilePath(environment::SpecialFile::TextExpansions).string();
             ShellExecute(NULL, NULL, utils::stringToWString(textExpansionsFilePath).c_str(), NULL, NULL, SW_SHOW);
@@ -107,9 +116,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
         }
 
         if (!g_settings.m_exists) {
+            // Writes the sample .INI resource file to application data
+            // if it doesn't exist.
             std::string resourceText = environment::getResource(IDR_SETTINGSINI, L"INI");
             file::write(g_settings.m_filePath, resourceText);
             g_settings = ini::IniFile(g_settings.m_filePath);
+
+            // Causes application to run at startup.
+            registerRunValue();
         }
 
         expansions::TextExpansionManager::init();
@@ -240,4 +254,24 @@ std::string onKeyDown(unsigned vkCode)
     }
 
     return std::string();
+}
+
+void registerRunValue()
+{
+    wchar_t buffer[MAX_PATH];
+    GetModuleFileName(NULL, buffer, MAX_PATH);
+    std::wstring fp(buffer);
+    HKEY hKey;
+    LONG retval = RegOpenKeyEx(HKEY_CURRENT_USER, L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", 0, KEY_WRITE, &hKey);
+    if (retval == ERROR_SUCCESS) {
+        RegSetValueEx(hKey, szTitle, 0, REG_SZ, (BYTE*)fp.c_str(), (unsigned)((fp.size() + 1) * sizeof(wchar_t)));
+    }
+}
+
+void deleteRunValue()
+{
+    HKEY hKey;
+    RegOpenKeyEx(HKEY_CURRENT_USER, L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", 0, KEY_ALL_ACCESS, &hKey);
+    RegDeleteValue(hKey, szTitle);
+    RegCloseKey(hKey);
 }
