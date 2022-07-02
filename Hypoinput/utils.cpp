@@ -2,30 +2,9 @@
 
 namespace utils {
 
-std::string wstringToString(const std::wstring& ws)
+std::string boolToString(bool b)
 {
-    int bufferSize = WideCharToMultiByte(CP_UTF8, 0, ws.c_str(), (int)ws.size(), NULL, 0, NULL, NULL);
-    std::string buffer(bufferSize, 0);
-    WideCharToMultiByte(CP_UTF8, 0, ws.c_str(), -1, &buffer[0], bufferSize, NULL, NULL);
-    return buffer;
-}
-
-std::wstring stringToWString(const std::string& s)
-{
-    const int size = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, NULL, 0);
-    std::wstring ws(size, 0);
-    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, &ws.at(0), size);
-    return ws;
-}
-
-bool startsWith(const std::string& instance, const std::string& value)
-{
-    if (!instance.empty() && value.empty()) {
-        return false;
-    }
-
-    // Returns true if instance starts with value; otherwise, false.
-    return instance.rfind(value, 0) == 0;
+    return b ? "true" : "false";
 }
 
 std::string ltrim(const std::string& s, char ch)
@@ -40,6 +19,21 @@ std::string ltrim(const std::string& s, char ch)
     return s.substr(i);
 }
 
+std::string replace(std::string oldValue, const std::string& newValue)
+{
+    size_t length = newValue.length();
+    while (true) {
+        size_t pos = oldValue.find(newValue);
+        if (pos == std::string::npos) {
+            break;
+        }
+
+        oldValue.erase(pos, length);
+    }
+
+    return oldValue;
+}
+
 std::string rtrim(const std::string& s, char ch)
 {
     size_t i = s.length() - 1;
@@ -52,9 +46,25 @@ std::string rtrim(const std::string& s, char ch)
     return s.substr(0, i + 1);
 }
 
-std::string boolToString(bool b)
+std::vector<std::string> split(const std::string& text, char ch)
 {
-    return b ? "true" : "false";
+    std::vector<std::string> strings;
+    std::stringstream ss(text);
+    for (std::string line; std::getline(ss, line, ch);) {
+        strings.push_back(line);
+    }
+
+    return strings;
+}
+
+bool startsWith(const std::string& instance, const std::string& value)
+{
+    if (!instance.empty() && value.empty()) {
+        return false;
+    }
+
+    // Returns true if instance starts with value; otherwise, false.
+    return instance.rfind(value, 0) == 0;
 }
 
 bool stringToBool(std::string s)
@@ -65,15 +75,12 @@ bool stringToBool(std::string s)
     return b;
 }
 
-std::vector<std::string> split(const std::string& text, char ch)
+std::wstring stringToWString(const std::string& s)
 {
-    std::vector<std::string> strings;
-    std::stringstream ss(text);
-    for (std::string line; std::getline(ss, line, ch);) {
-        strings.push_back(line);
-    }
-
-    return strings;
+    const int size = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, NULL, 0);
+    std::wstring ws(size, 0);
+    MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, &ws.at(0), size);
+    return ws;
 }
 
 std::string trim(const std::string& s, char ch)
@@ -99,19 +106,12 @@ std::string trim(const std::string& s, char ch)
     return s.substr(start, length);
 }
 
-std::string replace(std::string oldValue, const std::string& newValue)
+std::string wstringToString(const std::wstring& ws)
 {
-    size_t length = newValue.length();
-    while (true) {
-        size_t pos = oldValue.find(newValue);
-        if (pos == std::string::npos) {
-            break;
-        }
-
-        oldValue.erase(pos, length);
-    }
-
-    return oldValue;
+    int bufferSize = WideCharToMultiByte(CP_UTF8, 0, ws.c_str(), (int)ws.size(), NULL, 0, NULL, NULL);
+    std::string buffer(bufferSize, 0);
+    WideCharToMultiByte(CP_UTF8, 0, ws.c_str(), -1, &buffer[0], bufferSize, NULL, NULL);
+    return buffer;
 }
 
 } // namespace utils
