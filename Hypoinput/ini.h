@@ -17,15 +17,15 @@ struct Value {
 
 class IniFile {
 public:
-    IniFile() = delete;
+    IniFile() = default;
     explicit IniFile(const std::filesystem::path&);
 
     std::string& operator[](const std::string&);
     void save();
+    void set(const std::string&, bool);
+    void set(const std::string&, const std::string&);
     template <typename T>
-    std::optional<Value> get(const std::string& key);
-    template <typename T>
-    void set(const std::string&, const T&);
+    std::optional<Value> get(const std::string&);
 
     std::filesystem::path m_filePath;
     bool m_exists;

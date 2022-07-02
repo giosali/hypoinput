@@ -35,6 +35,16 @@ void IniFile::save()
     fs.close();
 }
 
+void IniFile::set(const std::string& key, bool value)
+{
+    m_map[key] = utils::boolToString(value);
+}
+
+void IniFile::set(const std::string& key, const std::string& value)
+{
+    m_map[key] = value;
+}
+
 template <typename T>
 std::optional<Value> IniFile::get(const std::string& key)
 {
@@ -46,16 +56,6 @@ std::optional<Value> IniFile::get(const std::string& key)
     }
 
     return value;
-}
-
-template <typename T>
-void IniFile::set(const std::string& key, const T& value)
-{
-    if (std::is_same<T, bool>::value) {
-        m_map[key] = utils::boolToString(value);
-    } else if (std::is_same<T, std::string>::value) {
-        m_map[key] = value;
-    }
 }
 
 void IniFile::read()
@@ -87,7 +87,7 @@ void IniFile::read()
     m_map = map;
 }
 
-template void IniFile::set<bool>(const std::string&, const bool&);
-template void IniFile::set<std::string>(const std::string&, const std::string&);
+template std::optional<Value> IniFile::get<bool>(const std::string&);
+template std::optional<Value> IniFile::get<std::string>(const std::string&);
 
 } // namespace ini
