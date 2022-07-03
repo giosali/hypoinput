@@ -5,7 +5,7 @@ namespace expansions {
 void TextExpansionManager::init()
 {
     file::create(environment::getFilePath(environment::SpecialFile::TextExpansions));
-    s_textExpansions = read();
+    refresh();
 }
 
 std::string TextExpansionManager::parse(std::string& input)
@@ -36,6 +36,11 @@ std::string TextExpansionManager::parse(std::string& input)
 
         return std::string();
     }
+}
+
+void TextExpansionManager::refresh()
+{
+    s_textExpansions = read();
 }
 
 std::string TextExpansionManager::getReplacement(const std::string& trigger)

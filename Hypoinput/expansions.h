@@ -14,6 +14,7 @@ class TextExpansionManager {
 public:
     static void init();
     static std::string parse(std::string&);
+    static void refresh();
     static std::string getReplacement(const std::string&);
 
 private:
