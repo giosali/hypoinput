@@ -3,6 +3,7 @@
 #include "environment.h"
 #include "expansions.h"
 #include "file.h"
+#include "filesystemwatcher.h"
 #include "ini.h"
 #include "keyboard.h"
 #include "utils.h"
@@ -18,6 +19,7 @@ static TCHAR szWindowClass[] = _T("hypoinput");
 static TCHAR szTitle[] = _T("Hypoinput");
 static ini::IniFile g_settings(environment::getFilePath(environment::SpecialFile::Settings));
 static keyboard::KeyboardHook g_keyboardHook;
+static filesystemwatcher::FileSystemWatcher g_textExpansionsFsw;
 HINSTANCE g_hInst = NULL;
 
 // Forward declarations of functions included in this code module:
@@ -27,6 +29,7 @@ BOOL deleteNotificationIcon(HWND&);
 void showContextMenu(HWND&, POINT&);
 void editContextMenuItem(HMENU&, int, UINT, bool, const wchar_t* = L"");
 std::string onKeyDown(unsigned);
+void onTextExpansionsChanged();
 void registerRunValue();
 void deleteRunValue();
 
@@ -131,11 +134,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
         }
 
         expansions::TextExpansionManager::init();
+
         g_keyboardHook = keyboard::KeyboardHook(onKeyDown);
         g_keyboardHook.add(g_hInst);
+
+        // Sets up a file system watcher for the text expansions file.
+        g_textExpansionsFsw = filesystemwatcher::FileSystemWatcher(environment::getFolderPath(environment::SpecialFolder::HypoinputApplicationData), onTextExpansionsChanged);
+        g_textExpansionsFsw.watch(FILE_NOTIFY_CHANGE_LAST_WRITE);
         break;
     case WM_DESTROY:
         deleteNotificationIcon(hWnd);
+        g_textExpansionsFsw.stop();
         PostQuitMessage(0);
         g_keyboardHook.remove();
         break;
@@ -258,6 +267,11 @@ std::string onKeyDown(unsigned vkCode)
     }
 
     return std::string();
+}
+
+void onTextExpansionsChanged()
+{
+    expansions::TextExpansionManager::refresh();
 }
 
 void registerRunValue()
