@@ -23,7 +23,8 @@ namespace {
 } // namespace
 
 enum class SpecialFolder {
-    ApplicationData
+    ApplicationData,
+    HypoinputApplicationData
 };
 
 enum class SpecialFile {

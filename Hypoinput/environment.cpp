@@ -14,6 +14,8 @@ std::filesystem::path getFolderPath(SpecialFolder specialFolder)
         }
 
         break;
+    case SpecialFolder::HypoinputApplicationData:
+        return getFolderPath(SpecialFolder::ApplicationData) / ApplicationName;
     }
 
     return std::filesystem::path();
