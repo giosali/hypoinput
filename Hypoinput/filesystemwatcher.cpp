@@ -2,8 +2,9 @@
 
 namespace filesystemwatcher {
 
-FileSystemWatcher::FileSystemWatcher(const std::filesystem::path& path)
+FileSystemWatcher::FileSystemWatcher(const std::filesystem::path& path, const std::function<void()>& onChanged)
     : m_path(path)
+    , m_onChanged(onChanged)
     , m_hEvent(NULL)
 {
     if (!std::filesystem::exists(path)) {
@@ -44,6 +45,7 @@ void FileSystemWatcher::_watch(unsigned filters)
                 return;
             }
 
+            m_onChanged();
             break;
         default:
             break;
