@@ -21,7 +21,7 @@ std::string TextExpansionManager::parse(std::string& input)
         return input;
     } else {
         bool startsWithInput = false;
-        std::string trimmedInput = input.empty() ? std::string() : input.substr(0, input.length());
+        std::string trimmedInput = input.empty() ? std::string() : input.substr(0, input.length() - 1);
         for (const auto& [key, value] : s_textExpansions) {
             // Checks if any of the keys begins with the trimmed input.
             // This gives the user some room for error or mistypes.
