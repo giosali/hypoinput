@@ -63,7 +63,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
     // This must be called before creating any HWNDs.
     SetProcessDPIAware();
 
-    // HWND_MESSAGE causes the window to be a message-only window.
+    // We cannot use HWND_MESSAGE as it causes the window to become a
+    // message-only window. Since a message-only window cannot receive
+    // broadcast messages, we won't be able to recreate the application's
+    // notification icon on taskbar creation.
     HWND hWnd = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, szWindowClass, szTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 800, 450, NULL, NULL, hInstance, NULL);
     if (!hWnd) {
         return 1;
