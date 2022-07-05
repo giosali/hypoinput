@@ -64,12 +64,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
     SetProcessDPIAware();
 
     // HWND_MESSAGE causes the window to be a message-only window.
-    HWND hWnd = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, szWindowClass, szTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 800, 450, HWND_MESSAGE, NULL, hInstance, NULL);
+    HWND hWnd = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, szWindowClass, szTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 800, 450, NULL, NULL, hInstance, NULL);
     if (!hWnd) {
         return 1;
     }
 
-    ShowWindow(hWnd, nCmdShow);
+    ShowWindow(hWnd, SW_HIDE);
 
     MSG msg;
     while (GetMessage(&msg, NULL, 0, 0)) {
@@ -83,6 +83,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+    static UINT s_uTaskbarRestart = 0;
+
     switch (msg) {
     case WM_COMMAND:
         switch (LOWORD(wParam)) {
@@ -118,6 +120,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
         break;
     case WM_CREATE:
+        s_uTaskbarRestart = RegisterWindowMessage(TEXT("TaskbarCreated"));
+
         if (!addNotificationIcon(hWnd)) {
             return -1;
         }
@@ -161,6 +165,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
         break;
     default:
+        if (msg == s_uTaskbarRestart) {
+            if (!addNotificationIcon(hWnd)) {
+                return -1;
+            }
+        }
+
         return DefWindowProc(hWnd, msg, wParam, lParam);
     }
 
