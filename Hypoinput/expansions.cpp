@@ -10,6 +10,25 @@ void TextExpansionManager::init()
 
 std::string TextExpansionManager::parse(std::string& input)
 {
+    static size_t inputLength = 0;
+    static bool checkInputLength = false;
+    static std::string backupInput;
+
+    // Handles the situation where a user begins to type a trigger but
+    // immediately proceeds to type a different trigger.
+    // If this situation is encountered, the trigger inside a trigger is
+    // stored inside `backupInput`.
+    if (checkInputLength) {
+        if (input.length() > inputLength) {
+            backupInput = input.substr(inputLength - 1);
+        }
+
+        checkInputLength = false;
+    }
+
+    // Updates the current input length.
+    inputLength = input.length();
+
     // Exits if there are no text expansions.
     if (s_textExpansions.size() == 0) {
         return std::string();
@@ -21,16 +40,28 @@ std::string TextExpansionManager::parse(std::string& input)
         return input;
     } else {
         bool startsWithInput = false;
+        bool startsWithTrimmedInput = false;
         std::string trimmedInput = input.empty() ? std::string() : input.substr(0, input.length() - 1);
         for (const auto& [key, value] : s_textExpansions) {
+            if (!backupInput.empty() && utils::startsWith(key, backupInput)) {
+                input = backupInput;
+                backupInput = std::string();
+            }
+
             // Checks if any of the keys begins with the trimmed input.
             // This gives the user some room for error or mistypes.
-            if (startsWithInput = (utils::startsWith(key, input) || utils::startsWith(key, trimmedInput))) {
+            startsWithInput = utils::startsWith(key, input);
+            startsWithTrimmedInput = utils::startsWith(key, trimmedInput);
+            if (startsWithInput || startsWithTrimmedInput) {
+                if (!startsWithInput) {
+                    checkInputLength = true;
+                }
+
                 break;
             }
         }
 
-        if (!startsWithInput) {
+        if (!startsWithInput && !startsWithTrimmedInput) {
             input = std::string();
         }
 
