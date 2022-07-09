@@ -68,6 +68,8 @@ BEGIN
         MENUITEM "Run at startup",              IDM_RUNATSTARTUP
         MENUITEM SEPARATOR
         MENUITEM "Open file",                   IDM_OPENFILE
+        MENUITEM "Add text expansion",          IDM_ADDTEXTEXPANSION
+        MENUITEM "Edit text expansions",        IDM_EDITTEXTEXPANSIONS
         MENUITEM SEPARATOR
         MENUITEM "Exit",                        IDM_EXIT
     END
