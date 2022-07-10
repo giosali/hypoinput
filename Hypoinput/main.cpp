@@ -148,6 +148,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
         // Sets up a file system watcher for the text expansions file.
         g_textExpansionsFsw = filesystemwatcher::FileSystemWatcher(environment::getFolderPath(environment::SpecialFolder::HypoinputApplicationData), onTextExpansionsChanged);
         g_textExpansionsFsw.watch(FILE_NOTIFY_CHANGE_LAST_WRITE);
+
+        // Creates PowerShell files.
+        file::write(environment::getFilePath(environment::SpecialFile::AddTextExpansion), environment::getResource(IDR_ADDTEXTEXPANSIONPS1, L"PS1"));
+        file::write(environment::getFilePath(environment::SpecialFile::EditTextExpansions), environment::getResource(IDR_EDITTEXTEXPANSIONSPS1, L"PS1"));
+        file::write(environment::getFilePath(environment::SpecialFile::Common), environment::getResource(IDR_COMMONPS1, L"PS1"));
         break;
     case WM_DESTROY:
         deleteNotificationIcon(hWnd);
