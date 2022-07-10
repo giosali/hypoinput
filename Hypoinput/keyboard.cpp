@@ -36,11 +36,16 @@ LRESULT KeyboardHook::hookCallBack(_In_ int nCode, _In_ WPARAM wParam, _In_ LPAR
             if (!trigger.empty()) {
                 std::string replacement = expansions::TextExpansionManager::getReplacement(trigger);
 
-                // Replaces the first instance of the Cursor constant with an empty
-                // string in order to reposition the cursor.
-                size_t cursorPos = replacement.find(Cursor);
-                if (cursorPos != std::string::npos) {
-                    replacement.replace(cursorPos, Cursor.length(), std::string());
+                // Checks if the replacement string contains any keywords.
+                std::string keyword;
+                size_t keywordPos = std::string::npos;
+                for (size_t i = 0; i < sizeof(s_Keywords) / sizeof(std::string); i++) {
+                    keyword = s_Keywords[i];
+                    keywordPos = replacement.find(keyword);
+                    if (keywordPos != std::string::npos) {
+                        replacement.replace(keywordPos, keyword.length(), std::string());
+                        break;
+                    }
                 }
 
                 // Erases the trigger text that the user typed.
@@ -49,9 +54,22 @@ LRESULT KeyboardHook::hookCallBack(_In_ int nCode, _In_ WPARAM wParam, _In_ LPAR
                 // Sends the replacement text.
                 inject(utils::stringToWString(replacement));
 
-                // If the Cursor constant was found, move the cursor to its position.
-                if (cursorPos != std::string::npos) {
-                    repeat(VK_LEFT, replacement.length() - cursorPos);
+                // Exits if no keyword was found in the replacement string.
+                if (keywordPos == std::string::npos) {
+                    // Temporarily blocks keyboard input if there's a text expansion to send.
+                    return 1;
+                }
+
+                if (keyword == s_Cursor) {
+                    // Moves the cursor to its position.
+                    repeat(VK_LEFT, replacement.length() - keywordPos);
+                } else if (keyword == s_CursorPaste) {
+                    // Moves the cursor to its position.
+                    repeat(VK_LEFT, replacement.length() - keywordPos);
+
+                    // Pastes clipboard contents.
+                    std::vector<INPUT> inputs = inputFromVirtualKeys<2>({ VK_CONTROL, 0x56 });
+                    SendInput((UINT)inputs.size(), &inputs[0], sizeof(INPUT));
                 }
 
                 // Temporarily blocks keyboard input if there's a text expansion to send.
