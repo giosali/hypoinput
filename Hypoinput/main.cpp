@@ -114,6 +114,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
             ShellExecute(NULL, NULL, utils::stringToWString(textExpansionsFilePath).c_str(), NULL, NULL, SW_SHOW);
             break;
         }
+        case IDM_ADDTEXTEXPANSION: {
+            std::wstring path = utils::stringToWString(environment::getFilePath(environment::SpecialFile::AddTextExpansion).string());
+            ShellExecute(NULL, NULL, L"powershell.exe", (L"-file " + path).c_str(), NULL, SW_SHOW);
+            break;
+        }
+        case IDM_EDITTEXTEXPANSIONS: {
+            std::wstring path = utils::stringToWString(environment::getFilePath(environment::SpecialFile::EditTextExpansions).string());
+            ShellExecute(NULL, NULL, L"powershell.exe", (L"-file " + path).c_str(), NULL, SW_SHOW);
+            break;
+        }
         case IDM_EXIT:
             DestroyWindow(hWnd);
             break;
