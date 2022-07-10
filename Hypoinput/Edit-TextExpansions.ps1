@@ -93,6 +93,7 @@ Function Main
     $form.Controls.Add($saveButton)
 
     $cancelButton = New-Button "Cancel" ([System.Windows.Forms.DialogResult]::Cancel) ($formSizeX - 40 - 150) $pointY
+    $form.CancelButton = $cancelButton
     $form.Controls.Add($cancelButton)
 
     $deleteButton = New-Button "Delete" ([System.Windows.Forms.DialogResult]::None) ($formSizeX - 40 - 75) $pointY
