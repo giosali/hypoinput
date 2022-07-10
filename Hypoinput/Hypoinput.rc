@@ -83,6 +83,18 @@ END
 
 IDR_SETTINGSINI         INI                     "Settings.ini"
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// PS1
+//
+
+IDR_ADDTEXTEXPANSIONPS1 PS1                     "Add-TextExpansion.ps1"
+
+IDR_EDITTEXTEXPANSIONSPS1 PS1                     "Edit-TextExpansions.ps1"
+
+IDR_COMMONPS1           PS1                     "Common.ps1"
+
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 

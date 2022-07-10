@@ -84,5 +84,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Settings.ini" />
+    <None Include="Add-TextExpansion.ps1" />
+    <None Include="Common.ps1" />
+    <None Include="Edit-TextExpansions.ps1" />
   </ItemGroup>
 </Project>

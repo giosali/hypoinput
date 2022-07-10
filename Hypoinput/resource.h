@@ -5,6 +5,9 @@
 #define IDR_NOTIFICATIONICONMENU        4
 #define IDI_NOTIFICATIONICON            101
 #define IDR_SETTINGSINI                 102
+#define IDR_ADDTEXTEXPANSIONPS1         103
+#define IDR_EDITTEXTEXPANSIONSPS1       104
+#define IDR_COMMONPS1                   105
 #define IDM_ENABLE                      40001
 #define IDM_RUNATSTARTUP                40002
 #define IDM_OPENFILE                    40003
@@ -16,7 +19,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        104
+#define _APS_NEXT_RESOURCE_VALUE        107
 #define _APS_NEXT_COMMAND_VALUE         40018
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           101
