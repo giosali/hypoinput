@@ -28,6 +28,12 @@ std::filesystem::path getFilePath(SpecialFile specialFile)
         return getFolderPath(SpecialFolder::ApplicationData) / ApplicationName / SettingsFileName;
     case SpecialFile::TextExpansions:
         return getFolderPath(SpecialFolder::ApplicationData) / ApplicationName / TextExpansionsFileName;
+    case SpecialFile::AddTextExpansion:
+        return getFolderPath(SpecialFolder::ApplicationData) / ApplicationName / AddTextExpansionsFileName;
+    case SpecialFile::EditTextExpansions:
+        return getFolderPath(SpecialFolder::ApplicationData) / ApplicationName / EditTextExpansionsFileName;
+    case SpecialFile::Common:
+        return getFolderPath(SpecialFolder::ApplicationData) / ApplicationName / CommonFileName;
     }
 
     return std::filesystem::path();
