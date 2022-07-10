@@ -83,9 +83,17 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Settings.ini" />
-    <None Include="Add-TextExpansion.ps1" />
-    <None Include="Common.ps1" />
-    <None Include="Edit-TextExpansions.ps1" />
+    <None Include="Add-TextExpansion.ps1">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Common.ps1">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Edit-TextExpansions.ps1">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Settings.ini">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
