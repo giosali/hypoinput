@@ -11,7 +11,9 @@ namespace keyboard {
 
 namespace {
 
-    static const std::string Cursor = "{{__cursor__}}";
+    static const std::string s_Cursor = "{{__CURSOR__}}";
+    static const std::string s_CursorPaste = "{{__CURSOR_PASTE__}}";
+    static const std::string s_Keywords[] = { s_Cursor, s_CursorPaste };
 
 } // namespace
 
