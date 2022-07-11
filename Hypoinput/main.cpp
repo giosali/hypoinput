@@ -36,8 +36,8 @@ void deleteRunValue();
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
     // Prevents multiple instances of this application from running.
-    HANDLE hMutex = CreateMutexEx(NULL, szWindowClass, CREATE_MUTEX_INITIAL_OWNER, MUTEX_ALL_ACCESS);
-    if (!hMutex) {
+    HANDLE hMutex = CreateMutexEx(NULL, L"Global\\Hypoinput", CREATE_MUTEX_INITIAL_OWNER, MUTEX_ALL_ACCESS);
+    if (hMutex == NULL || GetLastError() == ERROR_ALREADY_EXISTS) {
         return 1;
     }
 
@@ -269,12 +269,12 @@ void editContextMenuItem(HMENU& hMenu, int idm, UINT fMask, bool check, const wc
 
 std::string onKeyDown(unsigned vkCode)
 {
-    static std::string input;
+    static std::string s_input;
 
     // Handles the Backspace key.
     if (vkCode == VK_BACK) {
-        if (!input.empty()) {
-            input.pop_back();
+        if (!s_input.empty()) {
+            s_input.pop_back();
         }
 
         return std::string();
@@ -286,11 +286,11 @@ std::string onKeyDown(unsigned vkCode)
         return std::string();
     }
 
-    input.append(key);
-    std::string trigger = expansions::TextExpansionManager::parse(input);
+    s_input.append(key);
+    std::string trigger = expansions::TextExpansionManager::parse(s_input);
     if (!trigger.empty()) {
         // Resets the input after matching the trigger.
-        input = std::string();
+        s_input = std::string();
         return trigger;
     }
 
