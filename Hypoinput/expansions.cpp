@@ -10,24 +10,24 @@ void TextExpansionManager::init()
 
 std::string TextExpansionManager::parse(std::string& input)
 {
-    static size_t inputLength = 0;
-    static bool checkInputLength = false;
-    static std::string backupInput;
+    static size_t s_inputLength = 0;
+    static bool s_checkInputLength = false;
+    static std::string s_backupInput;
 
     // Handles the situation where a user begins to type a trigger but
     // immediately proceeds to type a different trigger.
     // If this situation is encountered, the trigger inside a trigger is
     // stored inside `backupInput`.
-    if (checkInputLength) {
-        if (input.length() > inputLength) {
-            backupInput = input.substr(inputLength - 1);
+    if (s_checkInputLength) {
+        if (input.length() > s_inputLength) {
+            s_backupInput = input.substr(s_inputLength - 1);
         }
 
-        checkInputLength = false;
+        s_checkInputLength = false;
     }
 
     // Updates the current input length.
-    inputLength = input.length();
+    s_inputLength = input.length();
 
     // Exits if there are no text expansions.
     if (s_textExpansions.size() == 0) {
@@ -43,9 +43,9 @@ std::string TextExpansionManager::parse(std::string& input)
         bool startsWithTrimmedInput = false;
         std::string trimmedInput = input.empty() ? std::string() : input.substr(0, input.length() - 1);
         for (const auto& [key, value] : s_textExpansions) {
-            if (!backupInput.empty() && utils::startsWith(key, backupInput)) {
-                input = backupInput;
-                backupInput = std::string();
+            if (!s_backupInput.empty() && utils::startsWith(key, s_backupInput)) {
+                input = s_backupInput;
+                s_backupInput = std::string();
             }
 
             // Checks if any of the keys begins with the trimmed input.
@@ -54,7 +54,7 @@ std::string TextExpansionManager::parse(std::string& input)
             startsWithTrimmedInput = utils::startsWith(key, trimmedInput);
             if (startsWithInput || startsWithTrimmedInput) {
                 if (!startsWithInput) {
-                    checkInputLength = true;
+                    s_checkInputLength = true;
                 }
 
                 break;

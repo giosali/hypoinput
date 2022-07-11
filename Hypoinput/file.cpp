@@ -35,4 +35,4 @@ void write(const std::filesystem::path& path, const std::string& text)
     ofs.close();
 }
 
-}
+} // namespace file
