@@ -103,7 +103,7 @@ If you've ever wished you could have a text expander application move or adjust 
 <div align="center">
 
 |          Keyword         |                   Use                               |                         Example                       |
-| :----------------------: | --------------------------------------------------- | ----------------------------------------------------- |
+| :----------------------: | :-------------------------------------------------- | :---------------------------------------------------- |
 |     {{\_\_CURSOR\_\_}}   | Moves cursor position to this location              | "Hello {{\_\_CURSOR\_\_}}, how are you?"              |
 | {{\_\_CURSOR_PASTE\_\_}} | Moves cursor position and pastes clipboard contents | "python_program {{\_\_CURSOR_PASTE\_\_}} --foo --bar" |
 
