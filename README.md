@@ -25,18 +25,18 @@
 
 ## Table of Contents
 
-- [❓ What Are Text Expansions?](#--what-are-text-expansions-)
-- [🎛️ Features](#----features)
-  * [📃 UTF-8](#---utf-8)
-  * [🛎️ Unique Triggers](#----unique-triggers)
-  * [🖱️ Cursor Position](#----cursor-position)
-- [🎁 Installation](#---installation)
-- [🔧 Usage](#---usage)
-  * [💻 GUI Editor](#---gui-editor)
-    + [➕ Adding a Text Expansion](#--adding-a-text-expansion)
-    + [📝 Editing or Deleting a Text Expansion](#---editing-or-deleting-a-text-expansion)
-  * [✍️ Manually Creating, Editing, or Deleting a Text Expansion](#---manually-creating--editing--or-deleting-a-text-expansion)
-  * [🛑 Disabling Hypoinput](#---disabling-hypoinput)
+- [❓ What Are Text Expansions?](#-what-are-text-expansions)
+- [🎛️ Features](#-features)
+  * [📃 UTF-8](#-utf-8)
+  * [🛎️ Unique Triggers](#-unique-triggers)
+  * [🖱️ Cursor Position](#-cursor-position)
+- [🎁 Installation](#-installation)
+- [🔧 Usage](#-usage)
+  * [💻 GUI Editor](#-gui-editor)
+    + [➕ Adding a Text Expansion](#-adding-a-text-expansion)
+    + [📝 Editing or Deleting a Text Expansion](#-editing-or-deleting-a-text-expansion)
+  * [✍️ Manually Creating, Editing, or Deleting a Text Expansion](#-manually-creating-editing-or-deleting-a-text-expansion)
+  * [🛑 Disabling Hypoinput](#-disabling-hypoinput)
 
 ## ❓ What Are Text Expansions?
 
