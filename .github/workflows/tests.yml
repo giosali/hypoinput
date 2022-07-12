@@ -1,0 +1,27 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+      
+    - name: Setup VSTest.console.exe
+      uses: darenm/Setup-VSTest@v1
+      
+    - name: Build app for release
+      run: msbuild tests\tests.vcxproj /p:configuration=Debug /p:platform=x64
+    
+    - name: VSTest
+      run: vstest.console.exe /Platform:x64 tests\x64\Debug\tests.dll
