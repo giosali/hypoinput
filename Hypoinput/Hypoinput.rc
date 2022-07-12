@@ -47,16 +47,6 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDI_NOTIFICATIONICON    ICON                    "C:\\Users\\gsali\\source\\repos\\Hypoinput\\Hypoinput.ico"
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
 // Menu
 //
 
@@ -94,6 +84,16 @@ IDR_ADDTEXTEXPANSIONPS1 PS1                     "Add-TextExpansion.ps1"
 IDR_EDITTEXTEXPANSIONSPS1 PS1                     "Edit-TextExpansions.ps1"
 
 IDR_COMMONPS1           PS1                     "Common.ps1"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_NOTIFICATIONICON    ICON                    "Hypoinput.ico"
 
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////

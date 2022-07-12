@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hypoinput", "Hypoinput\Hypoinput.vcxproj", "{1E672195-F1D7-42F4-A1EB-7D53CBFD4061}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "installer", "installer\installer.vdproj", "{AEC4F82B-AAD2-47A3-81AF-26502C929E1D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,12 @@ Global
 		{1E672195-F1D7-42F4-A1EB-7D53CBFD4061}.Release|x64.Build.0 = Release|x64
 		{1E672195-F1D7-42F4-A1EB-7D53CBFD4061}.Release|x86.ActiveCfg = Release|Win32
 		{1E672195-F1D7-42F4-A1EB-7D53CBFD4061}.Release|x86.Build.0 = Release|Win32
+		{AEC4F82B-AAD2-47A3-81AF-26502C929E1D}.Debug|x64.ActiveCfg = Debug
+		{AEC4F82B-AAD2-47A3-81AF-26502C929E1D}.Debug|x64.Build.0 = Debug
+		{AEC4F82B-AAD2-47A3-81AF-26502C929E1D}.Debug|x86.ActiveCfg = Debug
+		{AEC4F82B-AAD2-47A3-81AF-26502C929E1D}.Release|x64.ActiveCfg = Release
+		{AEC4F82B-AAD2-47A3-81AF-26502C929E1D}.Release|x64.Build.0 = Release
+		{AEC4F82B-AAD2-47A3-81AF-26502C929E1D}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

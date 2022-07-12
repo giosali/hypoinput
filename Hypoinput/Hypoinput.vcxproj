@@ -166,13 +166,13 @@
     <ResourceCompile Include="Hypoinput.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\Hypoinput.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Add-TextExpansion.ps1" />
     <None Include="Common.ps1" />
     <None Include="Edit-TextExpansions.ps1" />
     <None Include="Settings.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Hypoinput.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
