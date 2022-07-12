@@ -203,7 +203,7 @@ BOOL addNotificationIcon(HWND& hWnd)
     nid.uID = g_notifyIconId;
     nid.uCallbackMessage = WMAPP_NOTIFYCALLBACK;
     nid.hIcon = (HICON)LoadImage(g_hInst, MAKEINTRESOURCE(IDI_NOTIFICATIONICON), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_DEFAULTSIZE);
-    wcscpy_s(nid.szTip, L"Hypoinput v0.1.0");
+    wcscpy_s(nid.szTip, L"Hypoinput v1.0.0");
     Shell_NotifyIcon(NIM_ADD, &nid);
 
     // NOTIFYICON_VERSION_4 is preferred
