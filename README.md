@@ -23,6 +23,21 @@
     <b>Hypoinput</b> is a lightweight text expansion application for Windows
 </p>
 
+## Table of Contents
+
+- [❓ What Are Text Expansions?](#--what-are-text-expansions-)
+- [🎛️ Features](#----features)
+  * [📃 UTF-8](#---utf-8)
+  * [🛎️ Unique Triggers](#----unique-triggers)
+  * [🖱️ Cursor Position](#----cursor-position)
+- [🎁 Installation](#---installation)
+- [🔧 Usage](#---usage)
+  * [💻 GUI Editor](#---gui-editor)
+    + [➕ Adding a Text Expansion](#--adding-a-text-expansion)
+    + [📝 Editing or Deleting a Text Expansion](#---editing-or-deleting-a-text-expansion)
+  * [✍️ Manually Creating, Editing, or Deleting a Text Expansion](#---manually-creating--editing--or-deleting-a-text-expansion)
+  * [🛑 Disabling Hypoinput](#---disabling-hypoinput)
+
 ## ❓ What Are Text Expansions?
 
 A text expansion is text that is automatically printed after typing some other specific text. The text that is automatically printed is known as the `replacement` while the specific text is known as the `trigger`. These two texts are what form a text expansion.
@@ -117,7 +132,7 @@ You can find the option to do both of these things by right-clicking on the appl
 The easiest way to create a text expansion is by right-clicking on the application icon in the system tray and clicking on `Add text expansion`.
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/giosali/hypoinput/main/ext/add-text-expansion.png" alt="Add text expansion" width="150">
+    <img src="https://raw.githubusercontent.com/giosali/hypoinput/main/ext/add-text-expansion.png" alt="Add text expansion" width="225">
 </p>
 
 This will run a PowerShell script which will render a GUI for creating a new text expansion.
@@ -133,7 +148,7 @@ This will run a PowerShell script which will render a GUI for creating a new tex
 Similar to adding a text expansion, you can edit or delete a text expansion by right-clicking on the application icon in the system tray and clicking on `Edit text expansions`.
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/giosali/hypoinput/main/ext/edit-text-expansions.png" alt="Edit text expansions" width="150">
+    <img src="https://raw.githubusercontent.com/giosali/hypoinput/main/ext/edit-text-expansions.png" alt="Edit text expansions" width="225">
 </p>
 
 This will run a PowerShell script which will render a GUI for editing or deleting your text expansions.
@@ -147,7 +162,7 @@ This will run a PowerShell script which will render a GUI for editing or deletin
 You can quickly access your `TextExpansions.json` file by right-clicking the application icon in the system tray and clicking on `Open file`. This will open the file in your default text editor application.
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/giosali/hypoinput/main/ext/open-file.png" alt="Open file" width="150">
+    <img src="https://raw.githubusercontent.com/giosali/hypoinput/main/ext/open-file.png" alt="Open file" width="225">
 </p>
 
 > ℹ️ The path to this file is `C:\Users\<username>\AppData\Roaming\Hypoinput\TextExpansions.json`
@@ -189,5 +204,5 @@ A few important takeaways from this:
 You can prevent text expansions from being triggered by right-clicking the application icon in the system tray and clicking on `Disable`. After disabling the application, you can then re-enable it by clicking on `Enable`.
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/giosali/hypoinput/main/ext/disable.png" alt="Disable" width="150">
+    <img src="https://raw.githubusercontent.com/giosali/hypoinput/main/ext/disable.png" alt="Disable" width="225">
 </p>
