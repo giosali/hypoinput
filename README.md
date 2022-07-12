@@ -20,6 +20,15 @@
 </p>
 
 <p align="center">
+    <a href="https://github.com/giosali/hypoinput/actions/workflows/build.yml">
+        <img src="https://github.com/giosali/hypoinput/actions/workflows/build.yml/badge.svg" alt="Build workflow">
+    </a>
+    <a href="https://github.com/giosali/hypoinput/actions/workflows/tests.yml">
+        <img src="https://github.com/giosali/hypoinput/actions/workflows/tests.yml/badge.svg" alt="Tests workflow">
+    </a>
+</p>
+
+<p align="center">
     <b>Hypoinput</b> is a lightweight text expansion application for Windows
 </p>
 
