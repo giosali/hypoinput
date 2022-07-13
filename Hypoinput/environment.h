@@ -1,5 +1,7 @@
 #pragma once
 
+#include "utils.h"
+#include <ShlObj.h>
 #include <Windows.h>
 #include <filesystem>
 #include <string>

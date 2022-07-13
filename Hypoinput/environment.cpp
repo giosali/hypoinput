@@ -5,15 +5,17 @@ namespace environment {
 std::filesystem::path getFolderPath(SpecialFolder specialFolder)
 {
     switch (specialFolder) {
-    case SpecialFolder::ApplicationData:
-        char* buffer;
-        if (_dupenv_s(&buffer, NULL, "APPDATA") == 0 && buffer != nullptr) {
-            std::filesystem::path path = buffer;
-            free(buffer);
+    case SpecialFolder::ApplicationData: {
+        wchar_t* buffer;
+        SHGetKnownFolderPath(FOLDERID_RoamingAppData, KF_FLAG_DEFAULT, NULL, &buffer);
+        std::filesystem::path path(utils::wstringToString(buffer));
+        CoTaskMemFree(buffer);
+        if (!path.empty()) {
             return path;
         }
 
         break;
+    }
     case SpecialFolder::HypoinputApplicationData:
         return getFolderPath(SpecialFolder::ApplicationData) / ApplicationName;
     }
