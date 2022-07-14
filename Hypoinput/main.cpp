@@ -166,6 +166,27 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
             ShellExecute(NULL, NULL, L"powershell.exe", (L"-file " + path).c_str(), NULL, SW_SHOW);
             break;
         }
+        case IDM_CHECKFORUPDATE: {
+            int button = 0;
+            if (isUpdateAvailable()) {
+                button = MessageBox(NULL, L"A new update is available! Would you like to update?", L"Update Available", MB_YESNO);
+            } else {
+                button = MessageBox(NULL, L"You're currently running the latest version! Check back again later for an update.", L"No Updates Available", MB_OK);
+            }
+
+            if (button == IDYES) {
+                std::filesystem::path updateExecutablePath = environment::getFilePath(environment::SpecialFile::UpdaterExecutable);
+                if (std::filesystem::exists(updateExecutablePath)) {
+                    // Runs updater.exe.
+                    ShellExecute(NULL, L"runas", utils::stringToWString(updateExecutablePath.string()).c_str(), NULL, NULL, SW_SHOW);
+
+                    // Shuts down application.
+                    DestroyWindow(hWnd);
+                }
+            }
+
+            break;
+        }
         case IDM_EXIT:
             DestroyWindow(hWnd);
             break;
