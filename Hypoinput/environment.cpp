@@ -18,6 +18,21 @@ std::filesystem::path getFolderPath(SpecialFolder specialFolder)
     }
     case SpecialFolder::HypoinputApplicationData:
         return getFolderPath(SpecialFolder::ApplicationData) / ApplicationName;
+    case SpecialFolder::TempHypoinputApplicationData:
+        return getFolderPath(SpecialFolder::HypoinputApplicationData) / TempDirectoryName;
+    case SpecialFolder::ProgramFiles: {
+        wchar_t* buffer;
+        SHGetKnownFolderPath(FOLDERID_ProgramFiles, KF_FLAG_DEFAULT, NULL, &buffer);
+        std::filesystem::path path(utils::wstringToString(buffer));
+        CoTaskMemFree(buffer);
+        if (!path.empty()) {
+            return path;
+        }
+
+        break;
+    }
+    case SpecialFolder::HypoinputProgramFiles:
+        return getFolderPath(SpecialFolder::ProgramFiles) / ApplicationName / ApplicationName;
     }
 
     return std::filesystem::path();
@@ -36,6 +51,12 @@ std::filesystem::path getFilePath(SpecialFile specialFile)
         return getFolderPath(SpecialFolder::ApplicationData) / ApplicationName / EditTextExpansionsFileName;
     case SpecialFile::Common:
         return getFolderPath(SpecialFolder::ApplicationData) / ApplicationName / CommonFileName;
+    case SpecialFile::ApplicationExecutable:
+        return getFolderPath(SpecialFolder::HypoinputProgramFiles) / ApplicationExecutableFileName;
+    case SpecialFile::OldApplicationExecutable:
+        return getFolderPath(SpecialFolder::HypoinputProgramFiles) / OldApplicationExecutableFileName;
+    case SpecialFile::UpdaterExecutable:
+        return getFolderPath(SpecialFolder::HypoinputProgramFiles) / UpdaterExecutableFileName;
     }
 
     return std::filesystem::path();

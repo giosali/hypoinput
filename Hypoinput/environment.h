@@ -24,12 +24,19 @@ namespace {
     static const std::string AddTextExpansionsFileName = "Add-TextExpansion.ps1";
     static const std::string EditTextExpansionsFileName = "Edit-TextExpansions.ps1";
     static const std::string CommonFileName = "Common.ps1";
+    static const std::string TempDirectoryName = "tmp";
+    static const std::string ApplicationExecutableFileName = ApplicationName + ".exe";
+    static const std::string OldApplicationExecutableFileName = ApplicationName + "_old.exe";
+    static const std::string UpdaterExecutableFileName = "updater.exe";
 
 } // namespace
 
 enum class SpecialFolder {
     ApplicationData,
-    HypoinputApplicationData
+    HypoinputApplicationData,
+    TempHypoinputApplicationData,
+    ProgramFiles,
+    HypoinputProgramFiles
 };
 
 enum class SpecialFile {
@@ -37,7 +44,10 @@ enum class SpecialFile {
     TextExpansions,
     AddTextExpansion,
     EditTextExpansions,
-    Common
+    Common,
+    ApplicationExecutable,
+    OldApplicationExecutable,
+    UpdaterExecutable
 };
 
 std::filesystem::path getFolderPath(SpecialFolder);
