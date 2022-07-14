@@ -9,6 +9,8 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "installer", "installer\inst
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tests", "tests\tests.vcxproj", "{271BF2D4-E657-414B-B9DE-BA8F3A6C3F45}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "updater", "updater\updater.vcxproj", "{8037CBDC-935F-4B2B-982B-98B719FB8427}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -39,6 +41,14 @@ Global
 		{271BF2D4-E657-414B-B9DE-BA8F3A6C3F45}.Release|x64.Build.0 = Release|x64
 		{271BF2D4-E657-414B-B9DE-BA8F3A6C3F45}.Release|x86.ActiveCfg = Release|Win32
 		{271BF2D4-E657-414B-B9DE-BA8F3A6C3F45}.Release|x86.Build.0 = Release|Win32
+		{8037CBDC-935F-4B2B-982B-98B719FB8427}.Debug|x64.ActiveCfg = Debug|x64
+		{8037CBDC-935F-4B2B-982B-98B719FB8427}.Debug|x64.Build.0 = Debug|x64
+		{8037CBDC-935F-4B2B-982B-98B719FB8427}.Debug|x86.ActiveCfg = Debug|Win32
+		{8037CBDC-935F-4B2B-982B-98B719FB8427}.Debug|x86.Build.0 = Debug|Win32
+		{8037CBDC-935F-4B2B-982B-98B719FB8427}.Release|x64.ActiveCfg = Release|x64
+		{8037CBDC-935F-4B2B-982B-98B719FB8427}.Release|x64.Build.0 = Release|x64
+		{8037CBDC-935F-4B2B-982B-98B719FB8427}.Release|x86.ActiveCfg = Release|Win32
+		{8037CBDC-935F-4B2B-982B-98B719FB8427}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
