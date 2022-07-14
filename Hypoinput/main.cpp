@@ -15,8 +15,9 @@
 // Global variables:
 const uint32_t g_notifyIconId = 1;
 const UINT WMAPP_NOTIFYCALLBACK = WM_APP + 1;
-static TCHAR szWindowClass[] = _T("hypoinput");
-static TCHAR szTitle[] = _T("Hypoinput");
+static std::wstring g_windowClass = L"hypoinput";
+static std::wstring g_title = L"Hypoinput";
+static std::wstring g_version = L"v1.0.0";
 static ini::IniFile g_settings(environment::getFilePath(environment::SpecialFile::Settings));
 static keyboard::KeyboardHook g_keyboardHook;
 static filesystemwatcher::FileSystemWatcher g_textExpansionsFsw;
@@ -55,7 +56,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
     wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
     wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     wcex.lpszMenuName = NULL;
-    wcex.lpszClassName = szWindowClass;
+    wcex.lpszClassName = g_windowClass.c_str();
     wcex.hIconSm = LoadIcon(wcex.hInstance, IDI_APPLICATION);
     RegisterClassEx(&wcex);
 
@@ -67,7 +68,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
     // message-only window. Since a message-only window cannot receive
     // broadcast messages, we won't be able to recreate the application's
     // notification icon on taskbar creation.
-    HWND hWnd = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, szWindowClass, szTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 800, 450, NULL, NULL, hInstance, NULL);
+    HWND hWnd = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, g_windowClass.c_str(), g_title.c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 800, 450, NULL, NULL, hInstance, NULL);
     if (!hWnd) {
         return 1;
     }
@@ -203,7 +204,7 @@ BOOL addNotificationIcon(HWND& hWnd)
     nid.uID = g_notifyIconId;
     nid.uCallbackMessage = WMAPP_NOTIFYCALLBACK;
     nid.hIcon = (HICON)LoadImage(g_hInst, MAKEINTRESOURCE(IDI_NOTIFICATIONICON), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_DEFAULTSIZE);
-    wcscpy_s(nid.szTip, L"Hypoinput v1.0.0");
+    wcscpy_s(nid.szTip, (g_title + L" " + g_version).c_str());
     Shell_NotifyIcon(NIM_ADD, &nid);
 
     // NOTIFYICON_VERSION_4 is preferred
@@ -310,7 +311,7 @@ void registerRunValue()
     HKEY hKey;
     LONG retval = RegOpenKeyEx(HKEY_CURRENT_USER, std::wstring(environment::constants::runSubkey).c_str(), 0, KEY_WRITE, &hKey);
     if (retval == ERROR_SUCCESS) {
-        RegSetValueEx(hKey, szTitle, 0, REG_SZ, (BYTE*)fp.c_str(), (unsigned)((fp.size() + 1) * sizeof(wchar_t)));
+        RegSetValueEx(hKey, g_title.c_str(), 0, REG_SZ, (BYTE*)fp.c_str(), (unsigned)((fp.size() + 1) * sizeof(wchar_t)));
     }
 }
 
@@ -318,6 +319,6 @@ void deleteRunValue()
 {
     HKEY hKey;
     RegOpenKeyEx(HKEY_CURRENT_USER, std::wstring(environment::constants::runSubkey).c_str(), 0, KEY_ALL_ACCESS, &hKey);
-    RegDeleteValue(hKey, szTitle);
+    RegDeleteValue(hKey, g_title.c_str());
     RegCloseKey(hKey);
 }
