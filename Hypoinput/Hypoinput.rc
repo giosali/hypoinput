@@ -61,6 +61,7 @@ BEGIN
         MENUITEM "Add text expansion",          IDM_ADDTEXTEXPANSION
         MENUITEM "Edit text expansions",        IDM_EDITTEXTEXPANSIONS
         MENUITEM SEPARATOR
+        MENUITEM "Check for update",            IDM_CHECKFORUPDATE
         MENUITEM "Exit",                        IDM_EXIT
     END
 END
