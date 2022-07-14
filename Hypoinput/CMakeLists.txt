@@ -1,5 +1,12 @@
 add_executable(${PROJECT_NAME} WIN32)
 
+include(FetchContent)
+FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
+                         GIT_TAG e53437b79965e5de9e9bef5a3e7ec609587268d6)
+FetchContent_MakeAvailable(cpr)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE cpr::cpr)
+
 target_sources(${PROJECT_NAME}
     PRIVATE
         Add-TextExpansion.ps1
