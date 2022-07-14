@@ -6,8 +6,10 @@
 #include "filesystemwatcher.h"
 #include "ini.h"
 #include "keyboard.h"
+#include "picojson.h"
 #include "utils.h"
 #include <Windows.h>
+#include <cpr/cpr.h>
 #include <cstdint>
 #include <string>
 #include <tchar.h>
@@ -33,6 +35,7 @@ std::string onKeyDown(unsigned);
 void onTextExpansionsChanged();
 void registerRunValue();
 void deleteRunValue();
+bool isUpdateAvailable();
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -321,4 +324,29 @@ void deleteRunValue()
     RegOpenKeyEx(HKEY_CURRENT_USER, std::wstring(environment::constants::runSubkey).c_str(), 0, KEY_ALL_ACCESS, &hKey);
     RegDeleteValue(hKey, g_title.c_str());
     RegCloseKey(hKey);
+}
+
+bool isUpdateAvailable()
+{
+    const std::string latestReleaseEp = "https://api.github.com/repos/giosali/hypoinput/releases/latest";
+    cpr::Response r = cpr::Get(cpr::Url { latestReleaseEp });
+    if (r.status_code != cpr::status::HTTP_OK && r.status_code >= 400) {
+        return false;
+    }
+
+    try {
+        picojson::value v;
+        std::string err = picojson::parse(v, r.text);
+        if (!err.empty()) {
+            return false;
+        }
+
+        if (!v.is<picojson::object>()) {
+            return false;
+        }
+
+        return v.get("tag_name").get<std::string>() != utils::wstringToString(g_version);
+    } catch (std::runtime_error) {
+        return false;
+    }
 }
