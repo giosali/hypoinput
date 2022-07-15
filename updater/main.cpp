@@ -1,6 +1,6 @@
-#include "Hypoinput/environment.h"
-#include "Hypoinput/utils.h"
+#include "environment.h"
 #include "picojson.h"
+#include "utils.h"
 #include <Windows.h>
 #include <cpr/cpr.h>
 #include <filesystem>
@@ -90,4 +90,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
         MessageBox(NULL, L"Encountered a runtime error! Please file an issue at:\nhttps://github.com/giosali/hypoinput/issues", NULL, MB_OK);
         return 1;
     }
+
+    return 0;
 }
