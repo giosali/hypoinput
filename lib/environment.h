@@ -18,16 +18,16 @@ namespace constants {
 
 namespace {
 
-    static const std::string_view ApplicationName = "Hypoinput";
-    static const std::string_view SettingsFileName = "Settings.ini";
-    static const std::string TextExpansionsFileName = "TextExpansions.json";
-    static const std::string AddTextExpansionsFileName = "Add-TextExpansion.ps1";
-    static const std::string EditTextExpansionsFileName = "Edit-TextExpansions.ps1";
-    static const std::string CommonFileName = "Common.ps1";
-    static const std::string TempDirectoryName = "tmp";
-    static const std::string ApplicationExecutableFileName = std::string(ApplicationName) + ".exe";
-    static const std::string OldApplicationExecutableFileName = std::string(ApplicationName) + "_old.exe";
-    static const std::string UpdaterExecutableFileName = "updater.exe";
+    inline static constexpr std::string_view s_applicationName = "Hypoinput";
+    inline static constexpr std::string_view s_settingsFileName = "Settings.ini";
+    inline static constexpr std::string_view s_textExpansionsFileName = "TextExpansions.json";
+    inline static constexpr std::string_view s_addTextExpansionsFileName = "Add-TextExpansion.ps1";
+    inline static constexpr std::string_view s_editTextExpansionsFileName = "Edit-TextExpansions.ps1";
+    inline static constexpr std::string_view s_commonFileName = "Common.ps1";
+    inline static constexpr std::string_view s_tempDirectoryName = "tmp";
+    inline static constexpr std::string_view s_executableExtension = ".exe";
+    inline static constexpr std::string_view s_oldExecutableSuffix = "_old.exe";
+    inline static constexpr std::string_view s_updaterExecutableFileName = "updater.exe";
 
 } // namespace
 

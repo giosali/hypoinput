@@ -17,9 +17,9 @@ std::filesystem::path getFolderPath(SpecialFolder specialFolder)
         break;
     }
     case SpecialFolder::HypoinputApplicationData:
-        return getFolderPath(SpecialFolder::ApplicationData) / ApplicationName;
+        return getFolderPath(SpecialFolder::ApplicationData) / s_applicationName;
     case SpecialFolder::TempHypoinputApplicationData:
-        return getFolderPath(SpecialFolder::HypoinputApplicationData) / TempDirectoryName;
+        return getFolderPath(SpecialFolder::HypoinputApplicationData) / s_tempDirectoryName;
     case SpecialFolder::ProgramFiles: {
         wchar_t* buffer;
         SHGetKnownFolderPath(FOLDERID_ProgramFiles, KF_FLAG_DEFAULT, NULL, &buffer);
@@ -32,7 +32,7 @@ std::filesystem::path getFolderPath(SpecialFolder specialFolder)
         break;
     }
     case SpecialFolder::HypoinputProgramFiles:
-        return getFolderPath(SpecialFolder::ProgramFiles) / ApplicationName / ApplicationName;
+        return getFolderPath(SpecialFolder::ProgramFiles) / s_applicationName / s_applicationName;
     }
 
     return std::filesystem::path();
@@ -42,21 +42,21 @@ std::filesystem::path getFilePath(SpecialFile specialFile)
 {
     switch (specialFile) {
     case SpecialFile::Settings:
-        return getFolderPath(SpecialFolder::ApplicationData) / ApplicationName / SettingsFileName;
+        return getFolderPath(SpecialFolder::ApplicationData) / s_applicationName / s_settingsFileName;
     case SpecialFile::TextExpansions:
-        return getFolderPath(SpecialFolder::ApplicationData) / ApplicationName / TextExpansionsFileName;
+        return getFolderPath(SpecialFolder::ApplicationData) / s_applicationName / s_textExpansionsFileName;
     case SpecialFile::AddTextExpansion:
-        return getFolderPath(SpecialFolder::ApplicationData) / ApplicationName / AddTextExpansionsFileName;
+        return getFolderPath(SpecialFolder::ApplicationData) / s_applicationName / s_addTextExpansionsFileName;
     case SpecialFile::EditTextExpansions:
-        return getFolderPath(SpecialFolder::ApplicationData) / ApplicationName / EditTextExpansionsFileName;
+        return getFolderPath(SpecialFolder::ApplicationData) / s_applicationName / s_editTextExpansionsFileName;
     case SpecialFile::Common:
-        return getFolderPath(SpecialFolder::ApplicationData) / ApplicationName / CommonFileName;
+        return getFolderPath(SpecialFolder::ApplicationData) / s_applicationName / s_commonFileName;
     case SpecialFile::ApplicationExecutable:
-        return getFolderPath(SpecialFolder::HypoinputProgramFiles) / ApplicationExecutableFileName;
+        return getFolderPath(SpecialFolder::HypoinputProgramFiles) / s_applicationName / s_executableExtension;
     case SpecialFile::OldApplicationExecutable:
-        return getFolderPath(SpecialFolder::HypoinputProgramFiles) / OldApplicationExecutableFileName;
+        return getFolderPath(SpecialFolder::HypoinputProgramFiles) / s_applicationName / s_oldExecutableSuffix;
     case SpecialFile::UpdaterExecutable:
-        return getFolderPath(SpecialFolder::HypoinputProgramFiles) / UpdaterExecutableFileName;
+        return getFolderPath(SpecialFolder::HypoinputProgramFiles) / s_updaterExecutableFileName;
     }
 
     return std::filesystem::path();
