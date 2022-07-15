@@ -18,15 +18,15 @@ namespace constants {
 
 namespace {
 
-    static const std::string ApplicationName = "Hypoinput";
-    static const std::string SettingsFileName = "Settings.ini";
+    static const std::string_view ApplicationName = "Hypoinput";
+    static const std::string_view SettingsFileName = "Settings.ini";
     static const std::string TextExpansionsFileName = "TextExpansions.json";
     static const std::string AddTextExpansionsFileName = "Add-TextExpansion.ps1";
     static const std::string EditTextExpansionsFileName = "Edit-TextExpansions.ps1";
     static const std::string CommonFileName = "Common.ps1";
     static const std::string TempDirectoryName = "tmp";
-    static const std::string ApplicationExecutableFileName = ApplicationName + ".exe";
-    static const std::string OldApplicationExecutableFileName = ApplicationName + "_old.exe";
+    static const std::string ApplicationExecutableFileName = std::string(ApplicationName) + ".exe";
+    static const std::string OldApplicationExecutableFileName = std::string(ApplicationName) + "_old.exe";
     static const std::string UpdaterExecutableFileName = "updater.exe";
 
 } // namespace
