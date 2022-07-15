@@ -12,7 +12,6 @@ target_sources(${PROJECT_NAME}
         Add-TextExpansion.ps1
         Common.ps1
         Edit-TextExpansions.ps1
-        environment.cpp
         expansions.cpp
         file.cpp
         filesystemwatcher.cpp
@@ -22,9 +21,7 @@ target_sources(${PROJECT_NAME}
         keyboard.cpp
         main.cpp
         Settings.ini
-        utils.cpp
     PUBLIC
-        environment.h
         expansions.h
         file.h
         filesystemwatcher.h
@@ -33,7 +30,6 @@ target_sources(${PROJECT_NAME}
         main.h
         picojson.h
         resource.h
-        utils.h
 )
 
 target_include_directories(${PROJECT_NAME}
