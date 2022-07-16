@@ -5,12 +5,8 @@ FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
                          GIT_TAG e53437b79965e5de9e9bef5a3e7ec609587268d6)
 FetchContent_MakeAvailable(cpr)
 
-target_link_libraries(${PROJECT_NAME}
-    PRIVATE
-        cpr::cpr
-    LINK_PUBLIC
-        lib
-)
+target_link_libraries(${PROJECT_NAME} PRIVATE cpr::cpr)
+target_link_libraries(${PROJECT_NAME} LINK_PUBLIC lib)
 
 target_sources(${PROJECT_NAME}
     PRIVATE
