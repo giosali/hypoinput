@@ -24,13 +24,7 @@
     <ClCompile Include="expansions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="environment.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="file.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ini.cpp">
@@ -53,16 +47,7 @@
     <ClInclude Include="expansions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="environment.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="file.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="picojson.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ini.h">
