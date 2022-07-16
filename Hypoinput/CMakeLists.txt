@@ -33,7 +33,6 @@ target_sources(${PROJECT_NAME}
         ini.h
         keyboard.h
         main.h
-        picojson.h
         resource.h
 )
 
