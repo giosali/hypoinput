@@ -11,3 +11,6 @@ target_sources(lib
 )
 
 target_include_directories(lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+target_compile_definitions(lib PUBLIC UNICODE)
+target_compile_definitions(lib PUBLIC _UNICODE)
