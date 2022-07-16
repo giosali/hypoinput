@@ -1,6 +1,5 @@
 #include "environment.h"
 #include "picojson.h"
-#include "utils.h"
 #include <Windows.h>
 #include <cpr/cpr.h>
 #include <filesystem>
@@ -48,7 +47,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
         ofs.close();
 
         // Extracts the contents of the installer file.
-        std::wstring parameters = L"/a " + utils::stringToWString(installerPath.string()) + L" /qn TARGETDIR=" + utils::stringToWString(outputPath.string());
+        std::wstring parameters = L"/a " + installerPath.wstring() + L" /qn TARGETDIR=" + outputPath.wstring();
         SHELLEXECUTEINFO shExecInfo = { sizeof(SHELLEXECUTEINFO) };
         shExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
         shExecInfo.hwnd = NULL;
@@ -85,7 +84,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
         std::filesystem::remove_all(tmpPath);
 
         // "Restarts" application.
-        ShellExecute(NULL, NULL, utils::stringToWString(environment::getFilePath(environment::SpecialFile::ApplicationExecutable).string()).c_str(), NULL, NULL, SW_SHOW);
+        ShellExecute(NULL, NULL, (environment::getFilePath(environment::SpecialFile::ApplicationExecutable)).wstring().c_str(), NULL, NULL, SW_SHOW);
+
+        // Removes old executable.
+        std::filesystem::remove(environment::getFilePath(environment::SpecialFile::OldApplicationExecutable));
     } catch (std::runtime_error) {
         MessageBox(NULL, L"Encountered a runtime error! Please file an issue at:\nhttps://github.com/giosali/hypoinput/issues", NULL, MB_OK);
         return 1;
