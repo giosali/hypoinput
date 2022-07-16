@@ -19,7 +19,7 @@ const uint32_t g_notifyIconId = 1;
 const UINT WMAPP_NOTIFYCALLBACK = WM_APP + 1;
 static std::wstring g_windowClass = L"hypoinput";
 static std::wstring g_title = L"Hypoinput";
-static std::wstring g_version = L"v1.0.0";
+static std::wstring g_version = L"v1.1.0";
 static ini::IniFile g_settings(environment::getFilePath(environment::SpecialFile::Settings));
 static keyboard::KeyboardHook g_keyboardHook;
 static filesystemwatcher::FileSystemWatcher g_textExpansionsFsw;
