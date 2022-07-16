@@ -89,6 +89,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
         // Removes old executable.
         std::filesystem::remove(environment::getFilePath(environment::SpecialFile::OldApplicationExecutable));
     } catch (std::runtime_error) {
+        //bool tmpPathExists = 
         MessageBox(NULL, L"Encountered a runtime error! Please file an issue at:\nhttps://github.com/giosali/hypoinput/issues", NULL, MB_OK);
         return 1;
     }
