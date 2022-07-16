@@ -1,0 +1,13 @@
+add_library(lib)
+
+target_sources(lib
+    PRIVATE
+        environment.cpp
+        utils.cpp
+    PUBLIC
+        environment.h
+        picojson.h
+        utils.h
+)
+
+target_include_directories(lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
