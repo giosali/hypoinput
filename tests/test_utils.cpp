@@ -2,8 +2,8 @@
 #include <vector>
 #include "pch.h"
 #include "CppUnitTest.h"
-#include "../Hypoinput/utils.h"
-#include "../Hypoinput/utils.cpp"
+#include "../lib/utils.h"
+#include "../lib/utils.cpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
