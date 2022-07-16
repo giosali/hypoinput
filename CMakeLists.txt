@@ -8,5 +8,5 @@ project(Hypoinput LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_subdirectory(${PROJECT_NAME})
 add_subdirectory(lib)
+add_subdirectory(${PROJECT_NAME})
