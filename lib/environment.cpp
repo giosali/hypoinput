@@ -52,9 +52,9 @@ std::filesystem::path getFilePath(SpecialFile specialFile)
     case SpecialFile::Common:
         return getFolderPath(SpecialFolder::ApplicationData) / s_applicationName / s_commonFileName;
     case SpecialFile::ApplicationExecutable:
-        return getFolderPath(SpecialFolder::HypoinputProgramFiles) / s_applicationName / s_executableExtension;
+        return (getFolderPath(SpecialFolder::HypoinputProgramFiles) / s_applicationName).replace_extension(s_executableExtension);
     case SpecialFile::OldApplicationExecutable:
-        return getFolderPath(SpecialFolder::HypoinputProgramFiles) / s_applicationName / s_oldExecutableSuffix;
+        return (getFolderPath(SpecialFolder::HypoinputProgramFiles) / s_applicationName).string() + std::string(s_oldExecutableSuffix);
     case SpecialFile::UpdaterExecutable:
         return getFolderPath(SpecialFolder::HypoinputProgramFiles) / s_updaterExecutableFileName;
     }
