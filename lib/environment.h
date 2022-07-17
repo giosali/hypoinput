@@ -1,6 +1,5 @@
 #pragma once
 
-#include "utils.h"
 #include <ShlObj.h>
 #include <Windows.h>
 #include <filesystem>
@@ -35,8 +34,7 @@ enum class SpecialFolder {
     ApplicationData,
     HypoinputApplicationData,
     TempHypoinputApplicationData,
-    ProgramFiles,
-    HypoinputProgramFiles
+    Executable
 };
 
 enum class SpecialFile {

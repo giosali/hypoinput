@@ -8,7 +8,7 @@ std::filesystem::path getFolderPath(SpecialFolder specialFolder)
     case SpecialFolder::ApplicationData: {
         wchar_t* buffer;
         SHGetKnownFolderPath(FOLDERID_RoamingAppData, KF_FLAG_DEFAULT, NULL, &buffer);
-        std::filesystem::path path(utils::wstringToString(buffer));
+        std::filesystem::path path(buffer);
         CoTaskMemFree(buffer);
         if (!path.empty()) {
             return path;
@@ -20,19 +20,11 @@ std::filesystem::path getFolderPath(SpecialFolder specialFolder)
         return getFolderPath(SpecialFolder::ApplicationData) / s_applicationName;
     case SpecialFolder::TempHypoinputApplicationData:
         return getFolderPath(SpecialFolder::HypoinputApplicationData) / s_tempDirectoryName;
-    case SpecialFolder::ProgramFiles: {
-        wchar_t* buffer;
-        SHGetKnownFolderPath(FOLDERID_ProgramFiles, KF_FLAG_DEFAULT, NULL, &buffer);
-        std::filesystem::path path(utils::wstringToString(buffer));
-        CoTaskMemFree(buffer);
-        if (!path.empty()) {
-            return path;
-        }
-
-        break;
+    case SpecialFolder::Executable: {
+        wchar_t buffer[MAX_PATH];
+        GetModuleFileName(NULL, buffer, MAX_PATH);
+        return std::filesystem::path(buffer);
     }
-    case SpecialFolder::HypoinputProgramFiles:
-        return getFolderPath(SpecialFolder::ProgramFiles) / s_applicationName / s_applicationName;
     }
 
     return std::filesystem::path();
@@ -52,11 +44,11 @@ std::filesystem::path getFilePath(SpecialFile specialFile)
     case SpecialFile::Common:
         return getFolderPath(SpecialFolder::ApplicationData) / s_applicationName / s_commonFileName;
     case SpecialFile::ApplicationExecutable:
-        return (getFolderPath(SpecialFolder::HypoinputProgramFiles) / s_applicationName).replace_extension(s_executableExtension);
+        return (getFolderPath(SpecialFolder::Executable) / s_applicationName).replace_extension(s_executableExtension);
     case SpecialFile::OldApplicationExecutable:
-        return (getFolderPath(SpecialFolder::HypoinputProgramFiles) / s_applicationName).string() + std::string(s_oldExecutableSuffix);
+        return (getFolderPath(SpecialFolder::Executable) / s_applicationName).string() + std::string(s_oldExecutableSuffix);
     case SpecialFile::UpdaterExecutable:
-        return getFolderPath(SpecialFolder::HypoinputProgramFiles) / s_updaterExecutableFileName;
+        return getFolderPath(SpecialFolder::Executable) / s_updaterExecutableFileName;
     }
 
     return std::filesystem::path();
