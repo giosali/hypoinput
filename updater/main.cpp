@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <cpr/cpr.h>
 #include <filesystem>
+#include <iterator>
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -89,8 +90,20 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
         // Removes the old executable.
         std::filesystem::remove(environment::getFilePath(environment::SpecialFile::OldApplicationExecutable));
     } catch (std::runtime_error) {
-        //bool tmpPathExists = 
-        MessageBox(NULL, L"Encountered a runtime error! Please file an issue at:\nhttps://github.com/giosali/hypoinput/issues", NULL, MB_OK);
+        std::filesystem::path tmpPath = environment::getFolderPath(environment::SpecialFolder::TempHypoinputApplicationData);
+        std::filesystem::path outputPath = tmpPath / "output";
+        bool tmpPathExists = std::filesystem::exists(tmpPath);
+        bool installerExists = std::filesystem::exists(tmpPath / "installer.msi");
+        bool outputPathExists = std::filesystem::exists(outputPath);
+
+        std::wstring tmpStatus = tmpPathExists ? L"Does tmp exist? YES\n" : L"Does tmp exist? NO\n";
+        std::wstring installerStatus = installerExists ? L"Does the installer exist? YES\n" : L"Does the installer exist? NO\n";
+        std::wstring outputStatus = outputPathExists ? L"Does output exist? YES\n" : L"Does output exist? NO\n";
+        std::wstring numOutputItems = L"Number of items in output: ";
+        if (outputPathExists) {
+            numOutputItems += std::to_wstring(std::distance(std::filesystem::directory_iterator(outputPath), {}));
+        }
+        MessageBox(NULL, (L"Encountered a runtime error! Please file an issue at:\nhttps://github.com/giosali/hypoinput/issues\n\n" + tmpStatus + installerStatus + outputStatus + numOutputItems).c_str(), NULL, MB_OK);
         return 1;
     }
 
