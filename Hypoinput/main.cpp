@@ -13,6 +13,7 @@
 #include <cstdint>
 #include <string>
 #include <tchar.h>
+#include <vector>
 
 // Global variables:
 const uint32_t g_notifyIconId = 1;
@@ -366,7 +367,17 @@ bool isUpdateAvailable()
             return false;
         }
 
-        return v.get("tag_name").get<std::string>() != utils::wstringToString(g_version);
+        // Removes the "v" prepended to the version strings.
+        std::vector<std::string> v1NumStrings = utils::split(v.get("tag_name").get<std::string>().substr(1), '.');
+        std::vector<std::string> v2NumStrings = utils::split(utils::wstringToString(g_version).substr(1), '.');
+
+        for (size_t i = 0; i < v1NumStrings.size(); i++) {
+            if (std::stoi(v1NumStrings[i]) > std::stoi(v2NumStrings[i])) {
+                return true;
+            }
+        }
+
+        return false;
     } catch (std::runtime_error) {
         return false;
     }
