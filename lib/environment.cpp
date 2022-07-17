@@ -23,7 +23,7 @@ std::filesystem::path getFolderPath(SpecialFolder specialFolder)
     case SpecialFolder::Executable: {
         wchar_t buffer[MAX_PATH];
         GetModuleFileName(NULL, buffer, MAX_PATH);
-        return std::filesystem::path(buffer);
+        return std::filesystem::path(buffer).parent_path();
     }
     }
 
