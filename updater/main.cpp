@@ -67,7 +67,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
         // current user's Program Files.
         std::filesystem::rename(environment::getFilePath(environment::SpecialFile::ApplicationExecutable), environment::getFilePath(environment::SpecialFile::OldApplicationExecutable));
 
-        std::filesystem::path programFilesPath = environment::getFolderPath(environment::SpecialFolder::HypoinputProgramFiles);
+        std::filesystem::path executableDir = environment::getFolderPath(environment::SpecialFolder::Executable);
         for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(outputPath)) {
             std::filesystem::path p = entry.path();
 
@@ -77,7 +77,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
             }
 
             // Moves every file/directory in the output directory to Program Files.
-            std::filesystem::rename(p, programFilesPath / p.filename());
+            std::filesystem::rename(p, executableDir / p.filename());
         }
 
         // Deletes the tmp directory and all of its contents.
@@ -86,7 +86,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
         // "Restarts" application.
         ShellExecute(NULL, NULL, (environment::getFilePath(environment::SpecialFile::ApplicationExecutable)).wstring().c_str(), NULL, NULL, SW_SHOW);
 
-        // Removes old executable.
+        // Removes the old executable.
         std::filesystem::remove(environment::getFilePath(environment::SpecialFile::OldApplicationExecutable));
     } catch (std::runtime_error) {
         //bool tmpPathExists = 
