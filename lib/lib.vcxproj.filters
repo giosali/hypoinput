@@ -24,12 +24,18 @@
     <ClInclude Include="picojson.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="localization.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="environment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="localization.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
