@@ -6,6 +6,7 @@
 #include "filesystemwatcher.h"
 #include "ini.h"
 #include "keyboard.h"
+#include "localization.h"
 #include "picojson.h"
 #include "utils.h"
 #include <Windows.h>
@@ -21,9 +22,10 @@ const UINT WMAPP_NOTIFYCALLBACK = WM_APP + 1;
 static std::wstring g_windowClass = L"hypoinput";
 static std::wstring g_title = L"Hypoinput";
 static std::wstring g_version = L"v1.1.0";
-static ini::IniFile g_settings(environment::getFilePath(environment::SpecialFile::Settings));
+static ini::File g_settings;
 static keyboard::KeyboardHook g_keyboardHook;
 static filesystemwatcher::FileSystemWatcher g_textExpansionsFsw;
+static localization::Resource g_resource;
 HINSTANCE g_hInst = NULL;
 
 // Forward declarations of functions included in this code module:
@@ -37,6 +39,7 @@ void onTextExpansionsChanged();
 void registerRunValue();
 void deleteRunValue();
 bool isUpdateAvailable();
+void updateSettingsIni();
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -94,28 +97,32 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     static UINT s_uTaskbarRestart = 0;
 
     switch (msg) {
-    case WM_CREATE:
+    case WM_CREATE: {
         s_uTaskbarRestart = RegisterWindowMessage(TEXT("TaskbarCreated"));
 
         if (!addNotificationIcon(hWnd)) {
             return -1;
         }
 
-        if (!g_settings.m_exists) {
-            // Writes the sample .INI resource file to application data
-            // if it doesn't exist.
-            std::string resourceText = environment::getResource(IDR_SETTINGSINI, L"INI");
-            file::write(g_settings.m_filePath, resourceText);
-            g_settings = ini::IniFile(g_settings.m_filePath);
+        std::filesystem::path settingsPath = environment::getFilePath(environment::SpecialFile::Settings);
+        if (!std::filesystem::exists(settingsPath)) {
+            // Writes the sample .INI resource file to application data if it doesn't exist.
+            file::write(settingsPath, environment::getResource(IDR_SETTINGSINI, L"INI"));
 
-            // Causes application to run at startup.
             registerRunValue();
         }
+
+        // Reads the Settings.ini file in AppData.
+        g_settings = ini::open(settingsPath);
+        updateSettingsIni();
 
         expansions::TextExpansionManager::init();
 
         g_keyboardHook = keyboard::KeyboardHook(onKeyDown);
         g_keyboardHook.add(g_hInst);
+
+        // Sets the language to use for the application.
+        g_resource = localization::Resource(static_cast<localization::Locale>(g_settings[std::string(environment::constants::settingsSection)].get<int>(std::string(environment::constants::languageKey))));
 
         // Sets up a file system watcher for the text expansions file.
         g_textExpansionsFsw = filesystemwatcher::FileSystemWatcher(environment::getFolderPath(environment::SpecialFolder::HypoinputApplicationData), onTextExpansionsChanged);
@@ -126,6 +133,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
         file::write(environment::getFilePath(environment::SpecialFile::EditTextExpansions), environment::getResource(IDR_EDITTEXTEXPANSIONSPS1, L"PS1"));
         file::write(environment::getFilePath(environment::SpecialFile::Common), environment::getResource(IDR_COMMONPS1, L"PS1"));
         break;
+    }
     case WM_DESTROY:
         deleteNotificationIcon(hWnd);
         g_textExpansionsFsw.stop();
@@ -139,9 +147,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
             break;
         case IDM_RUNATSTARTUP: {
             // Edits the .INI settings file.
-            bool runAtStartup = !g_settings.get<bool>(std::string(environment::constants::runAtStartup)).value().boolean;
-            g_settings.set(std::string(environment::constants::runAtStartup), runAtStartup);
-            g_settings.save();
+            bool runAtStartup = !g_settings[std::string(environment::constants::settingsSection)].get<bool>(std::string(environment::constants::runAtStartupKey));
+            g_settings[std::string(environment::constants::settingsSection)].set<bool>(std::string(environment::constants::runAtStartupKey), runAtStartup);
+            g_settings.write(environment::getFilePath(environment::SpecialFile::Settings));
 
             // Edits the registry value.
             if (runAtStartup) {
@@ -168,13 +176,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
             break;
         }
         case IDM_CHECKFORUPDATES: {
-            int button = 0;
-            if (isUpdateAvailable()) {
-                button = MessageBox(NULL, L"A new update is available! Would you like to update?", L"Update Available", MB_YESNO);
-            } else {
-                button = MessageBox(NULL, L"You're currently running the latest version! Check back again later for an update.", L"No Updates Available", MB_OK);
-            }
-
+            int button = isUpdateAvailable() ? MessageBox(NULL, g_resource[localization::Text::UpdatesAvailableText].c_str(), g_resource[localization::Text::UpdatesAvailableCaption].c_str(), MB_YESNO) : MessageBox(NULL, g_resource[localization::Text::NoUpdatesAvailableText].c_str(), g_resource[localization::Text::NoUpdatesAvailableCaption].c_str(), MB_OK);
             if (button == IDYES) {
                 std::filesystem::path updateExecutablePath = environment::getFilePath(environment::SpecialFile::UpdaterExecutable);
                 if (std::filesystem::exists(updateExecutablePath)) {
@@ -258,11 +260,13 @@ void showContextMenu(HWND& hWnd, POINT& pt)
         return;
     }
 
-    std::wstring isEnabledStatus = g_keyboardHook.s_isEnabled ? L"Disable" : L"Enable";
-    editContextMenuItem(hMenu, IDM_ENABLE, MIIM_STRING | MIIM_DATA, false, isEnabledStatus.c_str());
-
-    /* TODO: Add .ini file handling */
-    editContextMenuItem(hMenu, IDM_RUNATSTARTUP, MIIM_STATE, g_settings.get<bool>(std::string(environment::constants::runAtStartup)).value().boolean);
+    editContextMenuItem(hMenu, IDM_ENABLE, MIIM_DATA | MIIM_STRING, false, g_resource[g_keyboardHook.s_isEnabled ? localization::Text::Disable : localization::Text::Enable].c_str());
+    editContextMenuItem(hMenu, IDM_RUNATSTARTUP, MIIM_STATE | MIIM_DATA | MIIM_STRING, g_settings[std::string(environment::constants::settingsSection)].get<bool>(std::string(environment::constants::runAtStartupKey)), g_resource[localization::Text::RunAtStartup].c_str());
+    editContextMenuItem(hMenu, IDM_OPENFILE, MIIM_DATA | MIIM_STRING, false, g_resource[localization::Text::OpenFile].c_str());
+    editContextMenuItem(hMenu, IDM_ADDTEXTEXPANSION, MIIM_DATA | MIIM_STRING, false, g_resource[localization::Text::AddTextExpansion].c_str());
+    editContextMenuItem(hMenu, IDM_EDITTEXTEXPANSIONS, MIIM_DATA | MIIM_STRING, false, g_resource[localization::Text::EditTextExpansions].c_str());
+    editContextMenuItem(hMenu, IDM_CHECKFORUPDATES, MIIM_DATA | MIIM_STRING, false, g_resource[localization::Text::CheckForUpdates].c_str());
+    editContextMenuItem(hMenu, IDM_EXIT, MIIM_DATA | MIIM_STRING, false, g_resource[localization::Text::Exit].c_str());
 
     // The window must be the foreground window before calling TrackPopupMenu
     // or the menu will not disappear when the user clicks away.
@@ -381,4 +385,20 @@ bool isUpdateAvailable()
     } catch (std::runtime_error) {
         return false;
     }
+}
+
+void updateSettingsIni()
+{
+    ini::File currentSettings = ini::load(environment::getResource(IDR_SETTINGSINI, L"INI"));
+    ini::Section currentSettingsSection = currentSettings[std::string(environment::constants::settingsSection)];
+    ini::Section& settingsSection = g_settings[std::string(environment::constants::settingsSection)];
+    if (currentSettingsSection.size() > settingsSection.size()) {
+        for (const auto& [key, value] : currentSettingsSection) {
+            if (!settingsSection.has_key(key)) {
+                settingsSection[key] = value;
+            }
+        }
+    }
+
+    g_settings.write(environment::getFilePath(environment::SpecialFile::Settings));
 }
