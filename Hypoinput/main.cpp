@@ -33,13 +33,14 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 BOOL addNotificationIcon(HWND&);
 BOOL deleteNotificationIcon(HWND&);
 void showContextMenu(HWND&, POINT&);
-void editContextMenuItem(HMENU&, int, UINT, bool, const wchar_t* = L"");
+void editContextMenuItem(HMENU&, int, UINT, bool, const wchar_t* = L"", bool byPosition = false);
 std::string onKeyDown(unsigned);
 void onTextExpansionsChanged();
 void registerRunValue();
 void deleteRunValue();
 bool isUpdateAvailable();
 void updateSettingsIni();
+void updateLocale(localization::Locale, localization::Locale);
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -160,6 +161,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
             break;
         }
+        case IDM_LANGUAGE_ENGLISH:
+            updateLocale(localization::Locale::EN, static_cast<localization::Locale>(g_settings[std::string(environment::constants::settingsSection)].get<int>(std::string(environment::constants::languageKey))));
+            break;
+        case IDM_LANGUAGE_ESPANOL:
+            updateLocale(localization::Locale::ES, static_cast<localization::Locale>(g_settings[std::string(environment::constants::settingsSection)].get<int>(std::string(environment::constants::languageKey))));
+            break;
+        case IDM_LANGUAGE_FRANCAIS:
+            updateLocale(localization::Locale::FR, static_cast<localization::Locale>(g_settings[std::string(environment::constants::settingsSection)].get<int>(std::string(environment::constants::languageKey))));
+            break;
         case IDM_OPENFILE: {
             std::string textExpansionsFilePath = environment::getFilePath(environment::SpecialFile::TextExpansions).string();
             ShellExecute(NULL, NULL, utils::stringToWString(textExpansionsFilePath).c_str(), NULL, NULL, SW_SHOW);
@@ -267,6 +277,19 @@ void showContextMenu(HWND& hWnd, POINT& pt)
     editContextMenuItem(hMenu, IDM_EDITTEXTEXPANSIONS, MIIM_DATA | MIIM_STRING, false, g_resource[localization::Text::EditTextExpansions].c_str());
     editContextMenuItem(hMenu, IDM_CHECKFORUPDATES, MIIM_DATA | MIIM_STRING, false, g_resource[localization::Text::CheckForUpdates].c_str());
     editContextMenuItem(hMenu, IDM_EXIT, MIIM_DATA | MIIM_STRING, false, g_resource[localization::Text::Exit].c_str());
+    editContextMenuItem(hSubMenu, 2, MIIM_DATA | MIIM_STRING, false, g_resource[localization::Text::Language].c_str(), true);
+
+    switch (static_cast<localization::Locale>(g_settings[std::string(environment::constants::settingsSection)].get<int>(std::string(environment::constants::languageKey)))) {
+    case localization::Locale::EN:
+        editContextMenuItem(hMenu, IDM_LANGUAGE_ENGLISH, MIIM_STATE, true);
+        break;
+    case localization::Locale::ES:
+        editContextMenuItem(hMenu, IDM_LANGUAGE_ESPANOL, MIIM_STATE, true);
+        break;
+    case localization::Locale::FR:
+        editContextMenuItem(hMenu, IDM_LANGUAGE_FRANCAIS, MIIM_STATE, true);
+        break;
+    }
 
     // The window must be the foreground window before calling TrackPopupMenu
     // or the menu will not disappear when the user clicks away.
@@ -280,11 +303,13 @@ void showContextMenu(HWND& hWnd, POINT& pt)
     DestroyMenu(hMenu);
 }
 
-void editContextMenuItem(HMENU& hMenu, int idm, UINT fMask, bool check, const wchar_t* caption)
+void editContextMenuItem(HMENU& hMenu, int idm, UINT fMask, bool check, const wchar_t* caption, bool byPosition)
 {
-    MENUITEMINFO mii = { sizeof(MENUITEMINFO) };
-    mii.fMask = fMask;
-    GetMenuItemInfo(hMenu, idm, FALSE, &mii);
+    MENUITEMINFO mii = {
+        sizeof(MENUITEMINFO),
+        fMask = fMask
+    };
+    GetMenuItemInfo(hMenu, idm, byPosition, &mii);
 
     if ((fMask & MIIM_STATE) == MIIM_STATE) {
         mii.fState = check ? MFS_CHECKED : MFS_UNCHECKED;
@@ -294,7 +319,7 @@ void editContextMenuItem(HMENU& hMenu, int idm, UINT fMask, bool check, const wc
         mii.dwTypeData = const_cast<LPWSTR>(caption);
     }
 
-    SetMenuItemInfo(hMenu, idm, FALSE, &mii);
+    SetMenuItemInfo(hMenu, idm, byPosition, &mii);
 }
 
 std::string onKeyDown(unsigned vkCode)
@@ -401,4 +426,15 @@ void updateSettingsIni()
     }
 
     g_settings.write(environment::getFilePath(environment::SpecialFile::Settings));
+}
+
+void updateLocale(localization::Locale locale, localization::Locale currentLocale)
+{
+    if (locale == currentLocale) {
+        return;
+    }
+
+    g_settings[std::string(environment::constants::settingsSection)].set<int>(std::string(environment::constants::languageKey), static_cast<int>(locale));
+    g_settings.write(environment::getFilePath(environment::SpecialFile::Settings));
+    g_resource = localization::Resource(locale);
 }
