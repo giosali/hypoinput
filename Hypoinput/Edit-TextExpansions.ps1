@@ -3,6 +3,8 @@ Add-Type -AssemblyName System.Drawing
 
 . (Join-Path -Path $PSScriptRoot -ChildPath "Common.ps1")
 
+$global:Resource = @{}
+
 Function New-Button($text, $dialogResult, $pointX, $pointY)
 {
     $button = New-Object System.Windows.Forms.Button
@@ -13,8 +15,67 @@ Function New-Button($text, $dialogResult, $pointX, $pointY)
     return $button
 }
 
-Function Main
+Function UpdateResource($locale)
 {
+    $formText
+    $listBoxLabel
+    $trigger
+    $replacement
+
+    $saveButtonText
+    $cancelButtonText
+    $deleteButtonText
+
+    Switch ($locale)
+    {
+        0
+        {
+            $formText = "Edit Text Expansions"
+            $listBoxLabel = "Your text expansions:"
+            $trigger = "Trigger:"
+            $replacement = "Replacement:"
+            $saveButtonText = "Save"
+            $cancelButtonText = "Cancel"
+            $deleteButtonText = "Delete"
+            break
+        }
+        1 
+        {
+            $formText = "Editar sus expansiónes de texto"
+            $listBoxLabel = "Sus expansiónes de texto:"
+            $trigger = "Disparador:"
+            $replacement = "Reemplazo:"
+            $saveButtonText = "Guardar"
+            $cancelButtonText = "Cancelar"
+            $deleteButtonText = "Borrar"
+            break
+        }
+        2
+        {
+            $formText = "Modifier vos expansions de texte"
+            $listBoxLabel = "Vos expansions de texte"
+            $trigger = "Déclencheur:"
+            $replacement = "Remplacement:"
+            $saveButtonText = "Enregistrer"
+            $cancelButtonText = "Annuler";
+            $deleteButtonText = "Supprimer"
+            break
+        }
+    }
+
+    $Resource["formText"] = $formText
+    $Resource["listBoxLabel"] = $listBoxLabel
+    $Resource["trigger"] = $trigger
+    $Resource["replacement"] = $replacement
+    $Resource["saveButtonText"] = $saveButtonText
+    $Resource["cancelButtonText"] = $cancelButtonText
+    $Resource["deleteButtonText"] = $deleteButtonText
+}
+
+Function Main($locale)
+{
+    UpdateResource($locale)
+
     $path = Join-Path -Path (Join-Path -Path ([Environment]::GetFolderPath("ApplicationData")) -ChildPath $ApplicationName) -ChildPath $TextExpansionsFileName
     $expansions = $null
     try
@@ -41,12 +102,12 @@ Function Main
     $form = New-Object System.Windows.Forms.Form
     $form.AutoScroll = $true
     $form.Size = New-Object System.Drawing.Size($formSizeX,$formSizeY)
-    $form.StartPosition = 'CenterScreen'
-    $form.Text = 'Edit Text Expansions'
+    $form.StartPosition = "CenterScreen"
+    $form.Text = $Resource["formText"];
     $form.Topmost = $true
 
     # ListBox
-    $form.Controls.Add((New-Label "Your text expansions:" ($formSizeX - 50) $pointX ($pointY += 20)))
+    $form.Controls.Add((New-Label $Resource["listBoxLabel"] ($formSizeX - 50) $pointX ($pointY += 20)))
     $listBox = New-Object System.Windows.Forms.ListBox
     $listBox.DisplayMember = "trigger"
     $listBox.Location = New-Object System.Drawing.Point($pointX,(($pointY += 20 + 150) - 150))
@@ -74,14 +135,14 @@ Function Main
     $form.Controls.Add($listBox)
 
     # TextBoxes
-    $triggerLabel = New-Label "Trigger:" ($formSizeX - 50) $pointX ($pointY += 20)
+    $triggerLabel = New-Label $Resource["trigger"] ($formSizeX - 50) $pointX ($pointY += 20)
     $triggerLabel.Enabled = $false
     $form.Controls.Add($triggerLabel)
     $triggerTextBox = New-TriggerTextBox ($formSizeX - 50) $pointX ($pointY += 20)
     $triggerTextBox.Enabled = $false
     $form.Controls.Add($triggerTextBox)
 
-    $replacementLabel = New-Label "Replacement:" ($formSizeX - 50) $pointX ($pointY += 40)
+    $replacementLabel = New-Label $Resource["replacement"] ($formSizeX - 50) $pointX ($pointY += 40)
     $replacementLabel.Enabled = $false
     $form.Controls.Add($replacementLabel)
     $replacementTextBox = New-ReplacementTextBox ($formSizeX - 50) $pointX (($pointY += 20 + 100) - 100)
@@ -89,14 +150,14 @@ Function Main
     $form.Controls.Add($replacementTextBox)
 
     # Buttons
-    $saveButton = New-Button "Save" ([System.Windows.Forms.DialogResult]::None) ($formSizeX - 40 - 225) ($pointY += 30)
+    $saveButton = New-Button $Resource["saveButtonText"] ([System.Windows.Forms.DialogResult]::None) ($formSizeX - 40 - 225) ($pointY += 30)
     $form.Controls.Add($saveButton)
 
-    $cancelButton = New-Button "Cancel" ([System.Windows.Forms.DialogResult]::Cancel) ($formSizeX - 40 - 150) $pointY
+    $cancelButton = New-Button $Resource["cancelButtonText"] ([System.Windows.Forms.DialogResult]::Cancel) ($formSizeX - 40 - 150) $pointY
     $form.CancelButton = $cancelButton
     $form.Controls.Add($cancelButton)
 
-    $deleteButton = New-Button "Delete" ([System.Windows.Forms.DialogResult]::None) ($formSizeX - 40 - 75) $pointY
+    $deleteButton = New-Button $Resource["deleteButtonText"] ([System.Windows.Forms.DialogResult]::None) ($formSizeX - 40 - 75) $pointY
     $deleteButton.Enabled = $false
     $form.Controls.Add($deleteButton)
 
@@ -147,4 +208,4 @@ Function Main
     }
 }
 
-Main
+Main $args[0]

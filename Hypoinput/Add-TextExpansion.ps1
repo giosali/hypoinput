@@ -3,6 +3,8 @@ Add-Type -AssemblyName System.Drawing
 
 . (Join-Path -Path $PSScriptRoot -ChildPath "Common.ps1")
 
+$global:Resource = @{}
+
 Function Add-TextExpansion($trigger, $replacement)
 {
     $path = Join-Path -Path (Join-Path -Path ([Environment]::GetFolderPath("ApplicationData")) -ChildPath $ApplicationName) -ChildPath $TextExpansionsFileName
@@ -33,8 +35,51 @@ Function Add-TextExpansion($trigger, $replacement)
     Write-File $path (Get-Content $path -Raw)
 }
 
-Function Main
+Function UpdateResource($locale)
 {
+    $formText
+    $cancelButtonText
+    $trigger
+    $replacement
+
+    Switch ($locale)
+    {
+        0
+        {
+            $formText = "Create a Text Expansion"
+            $cancelButtonText = "Cancel"
+            $trigger = "Trigger:"
+            $replacement = "Replacement:"
+            break
+        }
+        1 
+        {
+            $formText = "Crear una expansión de texto"
+            $cancelButtonText = "Cancelar"
+            $trigger = "Disparador:"
+            $replacement = "Reemplazo:"
+            break
+        }
+        2
+        {
+            $formText = "Créer une expansion de texte"
+            $cancelButtonText = "Annuler";
+            $trigger = "Déclencheur:"
+            $replacement = "Remplacement:"
+            break
+        }
+    }
+
+    $Resource["formText"] = $formText
+    $Resource["cancelButtonText"] = $cancelButtonText
+    $Resource["trigger"] = $trigger
+    $Resource["replacement"] = $replacement
+}
+
+Function Main($locale)
+{
+    UpdateResource $locale
+
     $formSizeX = 500
     $formSizeY = 400
 
@@ -43,7 +88,7 @@ Function Main
     $form.AutoScroll = $true
     $form.Size = New-Object System.Drawing.Size($formSizeX,$formSizeY)
     $form.StartPosition = "CenterScreen"
-    $form.Text = "Create a Text Expansion"
+    $form.Text = $Resource["formText"]
     $form.Topmost = $true
 
     # Buttons
@@ -52,17 +97,17 @@ Function Main
     $form.AcceptButton = $okButton
     $form.Controls.Add($okButton)
 
-    $cancelButton = New-Button "Cancel" ([System.Windows.Forms.DialogResult]::Cancel) ($formSizeX - 40 - 75) ($formSizeY - 75)
+    $cancelButton = New-Button $Resource["cancelButtonText"] ([System.Windows.Forms.DialogResult]::Cancel) ($formSizeX - 40 - 75) ($formSizeY - 75)
     $form.CancelButton = $cancelButton
     $form.Controls.Add($cancelButton)
 
     #TextBoxes
-    $label = New-Label "Trigger:" ($formSizeX - 50) 10 20
+    $label = New-Label $Resource["trigger"] ($formSizeX - 50) 10 20
     $form.Controls.Add($label)
     $triggerTextBox = New-TriggerTextBox ($formSizeX - 50) 10 40
     $form.Controls.Add($triggerTextBox)
     
-    $label = New-Label "Replacement:" ($formSizeX - 50) 10 80
+    $label = New-Label $Resource["replacement"] ($formSizeX - 50) 10 80
     $form.Controls.Add($label)
     $replacementTextBox = New-ReplacementTextBox ($formSizeX - 50) 10 100
     $form.Controls.Add($replacementTextBox)
@@ -78,4 +123,4 @@ Function Main
     }
 }
 
-Main
+Main $args[0]
