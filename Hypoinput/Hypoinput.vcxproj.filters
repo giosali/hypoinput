@@ -27,9 +27,6 @@
     <ClCompile Include="file.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ini.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="filesystemwatcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -50,10 +47,10 @@
     <ClInclude Include="file.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ini.h">
+    <ClInclude Include="filesystemwatcher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="filesystemwatcher.h">
+    <ClInclude Include="ini.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

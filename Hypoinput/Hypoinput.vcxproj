@@ -162,7 +162,6 @@
     <ClCompile Include="expansions.cpp" />
     <ClCompile Include="file.cpp" />
     <ClCompile Include="filesystemwatcher.cpp" />
-    <ClCompile Include="ini.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
