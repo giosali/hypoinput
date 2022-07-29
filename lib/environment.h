@@ -12,6 +12,7 @@ namespace constants {
 
     inline constexpr std::string_view settingsSection = "Settings";
     inline constexpr std::string_view runAtStartupKey = "runAtStartup";
+    inline constexpr std::string_view languageKey = "language";
     inline constexpr std::wstring_view runSubkey = L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run";
 
 } // namespace constants
