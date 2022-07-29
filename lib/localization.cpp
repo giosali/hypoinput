@@ -13,6 +13,7 @@ Resource::Resource(Locale locale)
     std::wstring disable;
     std::wstring enable;
     std::wstring runAtStartup;
+    std::wstring language;
     std::wstring openFile;
     std::wstring addTextExpansion;
     std::wstring editTextExpansions;
@@ -29,6 +30,7 @@ Resource::Resource(Locale locale)
         disable = L"Disable";
         enable = L"Enable";
         runAtStartup = L"Run at startup";
+        language = L"Language";
         openFile = L"Open file";
         addTextExpansion = L"Add text expansion";
         editTextExpansions = L"Edit text expansions";
@@ -44,6 +46,7 @@ Resource::Resource(Locale locale)
         disable = L"Desactivar";
         enable = L"Activar";
         runAtStartup = L"Ejecutar al inicio";
+        language = L"Idioma";
         openFile = L"Abrir archivo";
         addTextExpansion = L"Agregar una expansión de texto";
         editTextExpansions = L"Editar sus expansiónes de texto";
@@ -59,6 +62,7 @@ Resource::Resource(Locale locale)
         disable = L"Désactiver";
         enable = L"Activer";
         runAtStartup = L"Lancer au démarrage";
+        language = L"Langue";
         openFile = L"Ouvrir le fichier";
         addTextExpansion = L"Ajouter une expansion de texte";
         editTextExpansions = L"Modifier vos expansions de texte";
@@ -75,6 +79,7 @@ Resource::Resource(Locale locale)
     m_textResources[Text::Disable] = disable;
     m_textResources[Text::Enable] = enable;
     m_textResources[Text::RunAtStartup] = runAtStartup;
+    m_textResources[Text::Language] = language;
     m_textResources[Text::OpenFile] = openFile;
     m_textResources[Text::AddTextExpansion] = addTextExpansion;
     m_textResources[Text::EditTextExpansions] = editTextExpansions;

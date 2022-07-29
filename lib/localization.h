@@ -15,6 +15,7 @@ enum class Text {
     Disable,
     Enable,
     RunAtStartup,
+    Language,
     OpenFile,
     AddTextExpansion,
     EditTextExpansions,
