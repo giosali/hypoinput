@@ -56,6 +56,12 @@ BEGIN
     BEGIN
         MENUITEM "Enable",                      IDM_ENABLE
         MENUITEM "Run at startup",              IDM_RUNATSTARTUP
+        POPUP "Language"
+        BEGIN
+            MENUITEM "English",                     IDM_LANGUAGE_ENGLISH
+            MENUITEM "Español",                     IDM_LANGUAGE_ESPANOL
+            MENUITEM "Français",                    IDM_LANGUAGE_FRANCAIS
+        END
         MENUITEM SEPARATOR
         MENUITEM "Open file",                   IDM_OPENFILE
         MENUITEM "Add text expansion",          IDM_ADDTEXTEXPANSION
