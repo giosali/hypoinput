@@ -10,7 +10,8 @@ namespace environment {
 
 namespace constants {
 
-    inline constexpr std::string_view runAtStartup = "Settings.runAtStartup";
+    inline constexpr std::string_view settingsSection = "Settings";
+    inline constexpr std::string_view runAtStartupKey = "runAtStartup";
     inline constexpr std::wstring_view runSubkey = L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run";
 
 } // namespace constants
