@@ -18,7 +18,6 @@ target_sources(${PROJECT_NAME}
         filesystemwatcher.cpp
         Hypoinput.ico
         Hypoinput.rc
-        ini.cpp
         keyboard.cpp
         main.cpp
         Settings.ini
