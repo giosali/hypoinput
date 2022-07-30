@@ -3,9 +3,11 @@ add_library(lib)
 target_sources(lib
     PRIVATE
         environment.cpp
+        localization.cpp
         utils.cpp
     PUBLIC
         environment.h
+        localization.h
         picojson.h
         utils.h
 )
