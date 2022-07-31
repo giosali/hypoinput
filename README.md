@@ -34,18 +34,18 @@
 
 ## Table of Contents
 
-- [❓ What Are Text Expansions?](#-what-are-text-expansions)
-- [🎛️ Features](#-features)
-  * [📃 UTF-8](#-utf-8)
-  * [🛎️ Unique Triggers](#-unique-triggers)
-  * [🖱️ Cursor Position](#-cursor-position)
-- [🎁 Installation](#-installation)
-- [🔧 Usage](#-usage)
-  * [💻 GUI Editor](#-gui-editor)
-    + [➕ Adding a Text Expansion](#-adding-a-text-expansion)
-    + [📝 Editing or Deleting a Text Expansion](#-editing-or-deleting-a-text-expansion)
-  * [✍️ Manually Creating, Editing, or Deleting a Text Expansion](#-manually-creating-editing-or-deleting-a-text-expansion)
-  * [🛑 Disabling Hypoinput](#-disabling-hypoinput)
+- [❓ What Are Text Expansions?](#--what-are-text-expansions-)
+- [🎛️ Features](#----features)
+  * [UTF-8](#utf-8)
+  * [Unique Triggers](#unique-triggers)
+  * [Cursor Position](#cursor-position)
+- [🎁 Installation](#---installation)
+- [🔧 Usage](#---usage)
+  * [GUI Editor](#gui-editor)
+    + [Adding a Text Expansion](#adding-a-text-expansion)
+    + [Editing or Deleting a Text Expansion](#editing-or-deleting-a-text-expansion)
+  * [Manually Creating, Editing, or Deleting a Text Expansion](#manually-creating--editing--or-deleting-a-text-expansion)
+  * [Disabling Hypoinput](#disabling-hypoinput)
 
 ## ❓ What Are Text Expansions?
 
@@ -74,7 +74,7 @@ As you can see, typing `$bphtml` produces some typical boilerplate HTML. Instead
 
 **Hypoinput** comes with many practical and handy features that you'd expect from a text expansion application.
 
-### 📃 UTF-8
+### UTF-8
 
 **Hypoinput** supports Unicode characters which means there's a wide range of characters that can be printed through text expansions, including but not limited to:
 
@@ -82,7 +82,7 @@ As you can see, typing `$bphtml` produces some typical boilerplate HTML. Instead
 - Accented letters (à, è, ì, ò, ù, À, È, Ì, Ò, Ù)
 - Chinese (漢字)
 
-### 🛎️ Unique Triggers
+### Unique Triggers
 
 Your input for getting a text expansion to trigger isn't limited to lowercase characters. With **Hypoinput**, your triggers can consist of both uppercase letters and special characters.
 
@@ -94,7 +94,7 @@ A couple valid triggers:
 
 If you can type it, you can use it!
 
-### 🖱️ Cursor Position
+### Cursor Position
 
 If you've ever wished you could have a text expander application move or adjust the cursor position for you after triggering a text expansion, then this is the application for you.
 
@@ -132,11 +132,11 @@ You can find the option to do both of these things by right-clicking on the appl
     <img src="https://raw.githubusercontent.com/giosali/hypoinput/main/ext/system-tray-icon.png" alt="System tray icon" width="75">
 </p>
 
-### 💻 GUI Editor
+### GUI Editor
 
 **Hypoinput** features a way to easily add, edit, or delete a text expansion by using a GUI.
 
-#### ➕ Adding a Text Expansion
+#### Adding a Text Expansion
 
 The easiest way to create a text expansion is by right-clicking on the application icon in the system tray and clicking on `Add text expansion`.
 
@@ -152,7 +152,7 @@ This will run a PowerShell script which will render a GUI for creating a new tex
     <img src="https://raw.githubusercontent.com/giosali/hypoinput/main/ext/add-text-expansion-gui.png" alt="GUI for adding a text expansion" width="400">
 </p>
 
-#### 📝 Editing or Deleting a Text Expansion
+#### Editing or Deleting a Text Expansion
 
 Similar to adding a text expansion, you can edit or delete a text expansion by right-clicking on the application icon in the system tray and clicking on `Edit text expansions`.
 
@@ -166,7 +166,7 @@ This will run a PowerShell script which will render a GUI for editing or deletin
     <img src="https://raw.githubusercontent.com/giosali/hypoinput/main/ext/editing-text-expansions-gui.png" alt="GUI for editing or deleting text expansions" width="400">
 </p>
 
-### ✍️ Manually Creating, Editing, or Deleting a Text Expansion
+### Manually Creating, Editing, or Deleting a Text Expansion
 
 You can quickly access your `TextExpansions.json` file by right-clicking the application icon in the system tray and clicking on `Open file`. This will open the file in your default text editor application.
 
@@ -208,7 +208,7 @@ A few important takeaways from this:
 - **Tabs** are indicated by `\t`
 - Make sure you save the file with `UTF-8` encoding (and not `UTF-8 with BOM` encoding)
 
-### 🛑 Disabling Hypoinput
+### Disabling Hypoinput
 
 You can prevent text expansions from being triggered by right-clicking the application icon in the system tray and clicking on `Disable`. After disabling the application, you can then re-enable it by clicking on `Enable`.
 
