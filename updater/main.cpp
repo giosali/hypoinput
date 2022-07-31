@@ -106,7 +106,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
             }
 
             // Handles instance where the file already exists and is currently in use.
-            std::filesystem::path oldExeItem = exeDir / append(outputItem, environment::constants::oldSuffix);
+            std::filesystem::path oldExeItem = exeDir / append(outputItem, environment::constants::oldSuffix).stem();
             std::filesystem::rename(exeItem, oldExeItem, errorCode);
             if (errorCode) {
                 MessageBox(NULL, utils::stringToWString(errorCode.message()).c_str(), L"Rename Executable Directory Item Failed", MB_OK);
