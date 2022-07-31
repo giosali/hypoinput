@@ -1,9 +1,15 @@
 #include "environment.h"
 #include "picojson.h"
+#include "utils.h"
 #include <Windows.h>
 #include <cpr/cpr.h>
 #include <filesystem>
 #include <iterator>
+#include <system_error>
+
+// Forward declarations
+
+std::filesystem::path append(const std::filesystem::path&, const std::string_view&);
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -33,22 +39,21 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
             return 1;
         }
 
-        std::filesystem::path tmpPath = environment::getFolderPath(environment::SpecialFolder::TempHypoinputApplicationData);
-        std::filesystem::path installerPath = tmpPath / "installer.msi";
-        std::filesystem::path outputPath = tmpPath / "output";
-        std::filesystem::create_directories(tmpPath);
+        std::filesystem::path tempDir = environment::getFolderPath(environment::SpecialFolder::HypoinputTemp);
+        std::filesystem::create_directories(tempDir);
+        std::filesystem::path installerFile = tempDir / "installer.msi";
+        std::filesystem::path outputDir = tempDir / "output";
 
-        // Gets the URL for the installer file and then downloads and saves
-        // it to AppData.
+        // Gets the URL for the installer file and then downloads and saves it to %TEMP%
         picojson::object& asset = assets[0].get<picojson::object>();
-        std::ofstream ofs(installerPath, std::ios::binary);
+        std::ofstream ofs(installerFile, std::ios::binary);
         cpr::Session s = cpr::Session();
         s.SetUrl(cpr::Url { asset["browser_download_url"].get<std::string>() });
         r = s.Download(ofs);
         ofs.close();
 
         // Extracts the contents of the installer file.
-        std::wstring parameters = L"/a " + installerPath.wstring() + L" /qn TARGETDIR=" + outputPath.wstring();
+        std::wstring parameters = L"/a " + installerFile.wstring() + L" /qn TARGETDIR=" + outputDir.wstring();
         SHELLEXECUTEINFO shExecInfo = { sizeof(SHELLEXECUTEINFO) };
         shExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
         shExecInfo.hwnd = NULL;
@@ -66,46 +71,83 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
         // Changes the name of the current application executable located in the
         // current user's Program Files.
-        std::filesystem::rename(environment::getFilePath(environment::SpecialFile::ApplicationExecutable), environment::getFilePath(environment::SpecialFile::OldApplicationExecutable));
+        std::error_code errorCode;
+        std::filesystem::path exeFile = environment::getFilePath(environment::SpecialFile::ApplicationExecutable);
+        std::filesystem::rename(exeFile, append(exeFile, environment::constants::oldSuffix), errorCode);
+        if (errorCode) {
+            MessageBox(NULL, utils::stringToWString(errorCode.message()).c_str(), L"Rename Application Executable Failed", MB_OK);
+            errorCode.clear();
+        }
 
-        std::filesystem::path executableDir = environment::getFolderPath(environment::SpecialFolder::Executable);
-        for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(outputPath)) {
-            std::filesystem::path p = entry.path();
+        std::filesystem::path exeDir = environment::getFolderPath(environment::SpecialFolder::Executable);
+        for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(outputDir)) {
+            std::filesystem::path outputItem = entry.path();
 
             // Skips the smaller installer file that appears after extraction by msiexec.
-            if (p.has_extension() && p.extension() == ".msi") {
+            if (outputItem.has_extension() && outputItem.extension() == ".msi") {
                 continue;
             }
 
-            // Moves every file/directory in the output directory to Program Files.
-            std::filesystem::rename(p, executableDir / p.filename());
+            // Skips directories.
+            if (std::filesystem::is_directory(outputItem)) {
+                continue;
+            }
+
+            // Attempts to move file from output directory to ProgramFiles
+            std::filesystem::path exeItem = exeDir / outputItem.filename();
+            std::filesystem::rename(outputItem, exeItem, errorCode);
+            if (!errorCode) {
+                continue;
+            }
+
+            if (errorCode.value() != ERROR_ACCESS_DENIED) {
+                MessageBox(NULL, utils::stringToWString(errorCode.message()).c_str(), L"Move Output Item Failed", MB_OK);
+                continue;
+            }
+
+            // Handles instance where the file already exists and is currently in use.
+            std::filesystem::path oldExeItem = exeDir / append(outputItem, environment::constants::oldSuffix);
+            std::filesystem::rename(exeItem, oldExeItem, errorCode);
+            if (errorCode) {
+                MessageBox(NULL, utils::stringToWString(errorCode.message()).c_str(), L"Rename Executable Directory Item Failed", MB_OK);
+                errorCode.clear();
+                continue;
+            }
+
+            // .old files will be deleted when the user reboots their computer.
+            MoveFileEx(oldExeItem.wstring().c_str(), NULL, MOVEFILE_DELAY_UNTIL_REBOOT);
+
+            // Retry moving the file from the output directory.
+            std::filesystem::rename(outputItem, exeItem, errorCode);
+            if (errorCode) {
+                MessageBox(NULL, utils::stringToWString(errorCode.message()).c_str(), L"Retry Rename Ouput Item Failed", MB_OK);
+            }
         }
 
         // Deletes the tmp directory and all of its contents.
-        std::filesystem::remove_all(tmpPath);
+        std::filesystem::remove_all(tempDir, errorCode);
+        if (errorCode) {
+            MessageBox(NULL, utils::stringToWString(errorCode.message()).c_str(), L"Remove Output Directory Failed", MB_OK);
+            errorCode.clear();
+        }
 
         // "Restarts" application.
         ShellExecute(NULL, NULL, (environment::getFilePath(environment::SpecialFile::ApplicationExecutable)).wstring().c_str(), NULL, NULL, SW_SHOW);
 
         // Removes the old executable.
-        std::filesystem::remove(environment::getFilePath(environment::SpecialFile::OldApplicationExecutable));
-    } catch (std::runtime_error) {
-        std::filesystem::path tmpPath = environment::getFolderPath(environment::SpecialFolder::TempHypoinputApplicationData);
-        std::filesystem::path outputPath = tmpPath / "output";
-        bool tmpPathExists = std::filesystem::exists(tmpPath);
-        bool installerExists = std::filesystem::exists(tmpPath / "installer.msi");
-        bool outputPathExists = std::filesystem::exists(outputPath);
-
-        std::wstring tmpStatus = tmpPathExists ? L"Does tmp exist? YES\n" : L"Does tmp exist? NO\n";
-        std::wstring installerStatus = installerExists ? L"Does the installer exist? YES\n" : L"Does the installer exist? NO\n";
-        std::wstring outputStatus = outputPathExists ? L"Does output exist? YES\n" : L"Does output exist? NO\n";
-        std::wstring numOutputItems = L"Number of items in output: ";
-        if (outputPathExists) {
-            numOutputItems += std::to_wstring(std::distance(std::filesystem::directory_iterator(outputPath), {}));
+        std::filesystem::remove(append(exeFile, environment::constants::oldSuffix), errorCode);
+        if (errorCode) {
+            MessageBox(NULL, utils::stringToWString(errorCode.message()).c_str(), L"Remove Old Executable Failed", MB_OK);
         }
-        MessageBox(NULL, (L"Encountered a runtime error! Please file an issue at:\nhttps://github.com/giosali/hypoinput/issues\n\n" + tmpStatus + installerStatus + outputStatus + numOutputItems).c_str(), NULL, MB_OK);
+    } catch (std::runtime_error) {
+        MessageBox(NULL, L"Encountered a runtime error! Please file an issue at:\nhttps://github.com/giosali/hypoinput/issues", NULL, MB_OK);
         return 1;
     }
 
     return 0;
+}
+
+std::filesystem::path append(const std::filesystem::path& path, const std::string_view& text)
+{
+    return path.parent_path() / (path.stem().string() + std::string(text) + path.extension().string());
 }
