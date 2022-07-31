@@ -163,7 +163,7 @@ Similar to adding a text expansion, you can edit or delete a text expansion by r
 This will run a PowerShell script which will render a GUI for editing or deleting your text expansions.
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/giosali/hypoinput/main/ext/editing-text-expansions-gui.png" alt="GUI for editing or deleting text expansions" width="400">
+    <img src="https://raw.githubusercontent.com/giosali/hypoinput/main/ext/edit-text-expansions-gui.png" alt="GUI for editing or deleting text expansions" width="400">
 </p>
 
 ### Manually Creating, Editing, or Deleting a Text Expansion
