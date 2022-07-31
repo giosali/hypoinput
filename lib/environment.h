@@ -13,6 +13,7 @@ namespace constants {
     inline constexpr std::string_view settingsSection = "Settings";
     inline constexpr std::string_view runAtStartupKey = "runAtStartup";
     inline constexpr std::string_view languageKey = "language";
+    inline constexpr std::string_view oldSuffix = "_old";
     inline constexpr std::wstring_view runSubkey = L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run";
 
 } // namespace constants
@@ -25,9 +26,7 @@ namespace {
     inline static constexpr std::string_view s_addTextExpansionsFileName = "Add-TextExpansion.ps1";
     inline static constexpr std::string_view s_editTextExpansionsFileName = "Edit-TextExpansions.ps1";
     inline static constexpr std::string_view s_commonFileName = "Common.ps1";
-    inline static constexpr std::string_view s_tempDirectoryName = "tmp";
     inline static constexpr std::string_view s_executableExtension = ".exe";
-    inline static constexpr std::string_view s_oldExecutableSuffix = "_old.exe";
     inline static constexpr std::string_view s_updaterExecutableFileName = "updater.exe";
 
 } // namespace
@@ -35,7 +34,7 @@ namespace {
 enum class SpecialFolder {
     ApplicationData,
     HypoinputApplicationData,
-    TempHypoinputApplicationData,
+    HypoinputTemp,
     Executable
 };
 
@@ -46,7 +45,6 @@ enum class SpecialFile {
     EditTextExpansions,
     Common,
     ApplicationExecutable,
-    OldApplicationExecutable,
     UpdaterExecutable
 };
 

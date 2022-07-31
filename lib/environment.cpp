@@ -18,8 +18,8 @@ std::filesystem::path getFolderPath(SpecialFolder specialFolder)
     }
     case SpecialFolder::HypoinputApplicationData:
         return getFolderPath(SpecialFolder::ApplicationData) / s_applicationName;
-    case SpecialFolder::TempHypoinputApplicationData:
-        return getFolderPath(SpecialFolder::HypoinputApplicationData) / s_tempDirectoryName;
+    case SpecialFolder::HypoinputTemp:
+        return std::filesystem::temp_directory_path() / s_applicationName;
     case SpecialFolder::Executable: {
         wchar_t buffer[MAX_PATH];
         GetModuleFileName(NULL, buffer, MAX_PATH);
@@ -45,8 +45,6 @@ std::filesystem::path getFilePath(SpecialFile specialFile)
         return getFolderPath(SpecialFolder::ApplicationData) / s_applicationName / s_commonFileName;
     case SpecialFile::ApplicationExecutable:
         return (getFolderPath(SpecialFolder::Executable) / s_applicationName).replace_extension(s_executableExtension);
-    case SpecialFile::OldApplicationExecutable:
-        return (getFolderPath(SpecialFolder::Executable) / s_applicationName).string() + std::string(s_oldExecutableSuffix);
     case SpecialFile::UpdaterExecutable:
         return getFolderPath(SpecialFolder::Executable) / s_updaterExecutableFileName;
     }
